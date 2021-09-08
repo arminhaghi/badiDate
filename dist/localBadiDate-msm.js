@@ -10,6 +10,28 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.window = global.window || {}, global.luxon));
 }(this, (function (exports, luxon) { 'use strict';
 
+    function _interopNamespace(e) {
+        if (e && e.__esModule) return e;
+        var n = Object.create(null);
+        if (e) {
+            Object.keys(e).forEach(function (k) {
+                if (k !== 'default') {
+                    var d = Object.getOwnPropertyDescriptor(e, k);
+                    Object.defineProperty(n, k, d.get ? d : {
+                        enumerable: true,
+                        get: function () {
+                            return e[k];
+                        }
+                    });
+                }
+            });
+        }
+        n['default'] = e;
+        return Object.freeze(n);
+    }
+
+    var luxon__namespace = /*#__PURE__*/_interopNamespace(luxon);
+
     /**
      * @license MeeusSunMoon v3.0.0
      * (c) 2018 Jan Greis
@@ -137,7 +159,7 @@
         let t;
         switch (true) {
             case y < -1999 || y > 3000:
-                throw 'DeltaT can only be calculated between 1999 BCE and 3000 CE';
+                throw new RangeError('DeltaT can only be calculated between 1999 BCE and 3000 CE');
             case y < -500:
                 u = (y - 1820) / 100;
                 return -20 + 32 * Math.pow(u, 2);
@@ -365,7 +387,7 @@
             suntime = suntime.plus({ seconds: Math.floor(m * 3600 * 24 + 0.5) });
         }
         else {
-            suntime = suntime.minus({ seconds: Math.floor(m * 3600 * 24 + 0.5) });
+            suntime = suntime.minus({ seconds: Math.floor(Math.abs(m) * 3600 * 24 + 0.5) });
         }
         if (roundToNearestMinute) {
             suntime = suntime.plus({ seconds: 30 }).set({ second: 0 });
@@ -425,7 +447,7 @@
         if (localM < 0) {
             return m + 1;
         }
-        else if (localM > 1) {
+        else /* istanbul ignore next */ if (localM > 1) {
             return m - 1;
         }
         return m;
@@ -731,6 +753,22 @@
     const noEventCodes = {
         SUN_HIGH: 'SUN_HIGH',
         SUN_LOW: 'SUN_LOW',
+    };
+
+    /**
+     * Uses the extra information encoded into the DateTime object for dates without
+     * a sun event if returnTimeForNoEventCase is true to mark the output string.
+     * @param {DateTime} datetime Input datetime.
+     * @param {string} formatString Valid DateTime format string.
+     * @returns {string} Formatted string with marker appended.
+     */
+    const format$1 = (datetime, formatString) => {
+        const noEventCode = datetime.errorCode;
+        let datestring = datetime.toFormat(formatString);
+        if (dateFormatKeys[noEventCode]) {
+            datestring += dateFormatKeys[noEventCode];
+        }
+        return datestring;
     };
     /**
      * Calculates sunrise on the provided date.
@@ -1192,10 +1230,10 @@
             this._invalidReason = undefined;
             try {
                 if (this._isDateObject(date)) {
-                    this._gregorianDate = luxon.DateTime.fromObject({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate(), zone: 'UTC' });
+                    this._gregorianDate = luxon__namespace.DateTime.fromObject({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate(), zone: 'UTC' });
                 }
-                else if (luxon.DateTime.isDateTime(date)) {
-                    this._gregorianDate = luxon.DateTime.fromObject({ year: date.year, month: date.month, day: date.day, zone: 'UTC' });
+                else if (luxon__namespace.DateTime.isDateTime(date)) {
+                    this._gregorianDate = luxon__namespace.DateTime.fromObject({ year: date.year, month: date.month, day: date.day, zone: 'UTC' });
                 }
                 else if (this._isYearMonthDay(date) || this._isYearHolyDayNumber(date)) {
                     this._setFromBadiDate(date);
@@ -1229,8 +1267,8 @@
                 arg.day === undefined && typeof arg.holyDayNumber === 'number';
         }
         _notInValidGregorianDateRange(datetime) {
-            const lowerBound = luxon.DateTime.fromObject({ year: 1844, month: 3, day: 21, zone: 'UTC' });
-            const upperBound = luxon.DateTime.fromObject({ year: 2351, month: 3, day: 20, zone: 'UTC' });
+            const lowerBound = luxon__namespace.DateTime.fromObject({ year: 1844, month: 3, day: 21, zone: 'UTC' });
+            const upperBound = luxon__namespace.DateTime.fromObject({ year: 2351, month: 3, day: 20, zone: 'UTC' });
             return datetime < lowerBound || datetime > upperBound;
         }
         _setFromGregorianDate() {
@@ -1238,15 +1276,15 @@
                 throw new RangeError('Input date outside of valid range (1844-03-21 - 2351-03-20)');
             }
             const gregorianYear = this._gregorianDate.year;
-            const oldImplementationCutoff = luxon.DateTime.fromObject({ year: 2015, month: 3, day: 21, zone: 'UTC' });
+            const oldImplementationCutoff = luxon__namespace.DateTime.fromObject({ year: 2015, month: 3, day: 21, zone: 'UTC' });
             if (this._gregorianDate < oldImplementationCutoff) {
                 const { month, day } = this._gregorianDate;
                 if (month < 3 || (month === 3 && day < 21)) {
-                    this._nawRuz = luxon.DateTime.fromObject({ year: gregorianYear - 1, month: 3, day: 21, zone: 'UTC' });
+                    this._nawRuz = luxon__namespace.DateTime.fromObject({ year: gregorianYear - 1, month: 3, day: 21, zone: 'UTC' });
                     this._year = gregorianYear - 1844;
                 }
                 else {
-                    this._nawRuz = luxon.DateTime.fromObject({ year: gregorianYear, month: 3, day: 21, zone: 'UTC' });
+                    this._nawRuz = luxon__namespace.DateTime.fromObject({ year: gregorianYear, month: 3, day: 21, zone: 'UTC' });
                     this._year = gregorianYear - 1843;
                 }
                 this._setOldAyyamiHaLength();
@@ -1282,7 +1320,7 @@
                 throw new RangeError('Input date outside of valid range (1 - 507 B.E.)');
             }
             else if (this._year < 172) {
-                this._nawRuz = luxon.DateTime.fromObject({ year: 1843 + this._year, month: 3, day: 21, zone: 'UTC' });
+                this._nawRuz = luxon__namespace.DateTime.fromObject({ year: 1843 + this._year, month: 3, day: 21, zone: 'UTC' });
                 this._setOldAyyamiHaLength();
                 this._yearTwinBirthdays = [12, 5, 13, 9];
             }
@@ -1314,10 +1352,10 @@
                 this._holyDay = date.holyDayNumber;
                 [this._month, this._day] = this._holyDayMapping()[this._holyDay];
             }
-            this._gregorianDate = this._nawRuz.plus(luxon.Duration.fromObject({ days: this._dayOfYear([this._year, this._month, this._day]) - 1 }));
+            this._gregorianDate = this._nawRuz.plus(luxon__namespace.Duration.fromObject({ days: this._dayOfYear([this._year, this._month, this._day]) - 1 }));
         }
         _setOldAyyamiHaLength() {
-            if (luxon.DateTime.fromObject({ year: this._nawRuz.year + 1 }).isInLeapYear) {
+            if (luxon__namespace.DateTime.fromObject({ year: this._nawRuz.year + 1 }).isInLeapYear) {
                 this._ayyamiHaLength = 5;
             }
             else {
@@ -1340,7 +1378,7 @@
             // istanbul ignore else
             if (badiYears[0] === 'l4da') {
                 const components = badiYears[this._year - 172].split('');
-                nawRuz = luxon.DateTime.fromObject({ year: this._year - 172 + 2015, month: 3, day: parseInt(components[0], 36), zone: 'UTC' });
+                nawRuz = luxon__namespace.DateTime.fromObject({ year: this._year - 172 + 2015, month: 3, day: parseInt(components[0], 36), zone: 'UTC' });
                 ayyamiHaLength = parseInt(components[1], 36);
                 const TB1 = [parseInt(components[2], 36), parseInt(components[3], 36)];
                 const TB2 = TB1[1] < 19 ? [TB1[0], TB1[1] + 1] : [TB1[0] + 1, 1];
@@ -1348,7 +1386,7 @@
             }
             else {
                 ({ nawRuz, ayyamiHaLength, twinBirthdays } = badiYears[this._year]);
-                nawRuz = luxon.DateTime.fromISO(nawRuz, { zone: 'UTC' });
+                nawRuz = luxon__namespace.DateTime.fromISO(nawRuz, { zone: 'UTC' });
             }
             return { nawRuz, ayyamiHaLength, twinBirthdays };
         }
@@ -1368,12 +1406,12 @@
             return date.diff(this._nawRuz).as('days') + 1;
         }
         _setInvalid(invalidReason) {
-            this._gregorianDate = luxon.DateTime.invalid('Not a valid Badí‘ date');
+            this._gregorianDate = luxon__namespace.DateTime.invalid('Not a valid Badí‘ date');
             this._year = NaN;
             this._month = NaN;
             this._day = NaN;
             this._ayyamiHaLength = NaN;
-            this._nawRuz = luxon.DateTime.invalid('Not a valid Badí‘ date');
+            this._nawRuz = luxon__namespace.DateTime.invalid('Not a valid Badí‘ date');
             this._valid = false;
             this._invalidReason = invalidReason;
         }
@@ -1526,7 +1564,7 @@
             return new BadiDate({ year: this._year, month: this._month, day: this._day - 1 });
         }
     }
-    const badiDateSettings = (settings) => {
+    const badiDateSettings$1 = (settings) => {
         if (settings.defaultLanguage) {
             setDefaultLanguage(settings.defaultLanguage);
         }
@@ -1696,7 +1734,7 @@
             }
         }
         _setInputDateToCorrectDay(date, latitude, longitude) {
-            if (luxon.DateTime.isDateTime(date)) {
+            if (luxon__namespace.DateTime.isDateTime(date)) {
                 const sunset$1 = sunset(date, latitude, longitude);
                 return (date > sunset$1) ? date.plus({ days: 1 }) : date;
             }
@@ -1745,20 +1783,22 @@
             return new LocalBadiDate(this.badiDate.previousDay, this._latitude, this._longitude, this._timezoneId);
         }
     }
-    const badiDateSettings$1 = (settings) => {
+    const badiDateSettings = (settings) => {
         if (typeof settings.defaultLanguage === 'string' ||
             typeof settings.underlineFormat === 'string') {
-            badiDateSettings(settings);
+            badiDateSettings$1(settings);
         }
         if (typeof settings.useClockLocations === 'boolean') {
             useClockLocations(settings.useClockLocations);
         }
     };
     settings({ returnTimeForNoEventCase: true, roundToNearestMinute: true });
+    const format = format$1;
 
     exports.BadiDate = BadiDate;
     exports.LocalBadiDate = LocalBadiDate;
-    exports.badiDateSettings = badiDateSettings$1;
+    exports.badiDateSettings = badiDateSettings;
+    exports.format = format;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

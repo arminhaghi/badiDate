@@ -10,6 +10,28 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.window = global.window || {}, global.luxon));
 }(this, (function (exports, luxon) { 'use strict';
 
+    function _interopNamespace(e) {
+        if (e && e.__esModule) return e;
+        var n = Object.create(null);
+        if (e) {
+            Object.keys(e).forEach(function (k) {
+                if (k !== 'default') {
+                    var d = Object.getOwnPropertyDescriptor(e, k);
+                    Object.defineProperty(n, k, d.get ? d : {
+                        enumerable: true,
+                        get: function () {
+                            return e[k];
+                        }
+                    });
+                }
+            });
+        }
+        n['default'] = e;
+        return Object.freeze(n);
+    }
+
+    var luxon__namespace = /*#__PURE__*/_interopNamespace(luxon);
+
     /**
      * @license MeeusSunMoon v3.0.0
      * (c) 2018 Jan Greis
@@ -137,7 +159,7 @@
         let t;
         switch (true) {
             case y < -1999 || y > 3000:
-                throw 'DeltaT can only be calculated between 1999 BCE and 3000 CE';
+                throw new RangeError('DeltaT can only be calculated between 1999 BCE and 3000 CE');
             case y < -500:
                 u = (y - 1820) / 100;
                 return -20 + 32 * Math.pow(u, 2);
@@ -365,7 +387,7 @@
             suntime = suntime.plus({ seconds: Math.floor(m * 3600 * 24 + 0.5) });
         }
         else {
-            suntime = suntime.minus({ seconds: Math.floor(m * 3600 * 24 + 0.5) });
+            suntime = suntime.minus({ seconds: Math.floor(Math.abs(m) * 3600 * 24 + 0.5) });
         }
         if (roundToNearestMinute) {
             suntime = suntime.plus({ seconds: 30 }).set({ second: 0 });
@@ -425,7 +447,7 @@
         if (localM < 0) {
             return m + 1;
         }
-        else if (localM > 1) {
+        else /* istanbul ignore next */ if (localM > 1) {
             return m - 1;
         }
         return m;
@@ -732,6 +754,22 @@
         SUN_HIGH: 'SUN_HIGH',
         SUN_LOW: 'SUN_LOW',
     };
+
+    /**
+     * Uses the extra information encoded into the DateTime object for dates without
+     * a sun event if returnTimeForNoEventCase is true to mark the output string.
+     * @param {DateTime} datetime Input datetime.
+     * @param {string} formatString Valid DateTime format string.
+     * @returns {string} Formatted string with marker appended.
+     */
+    const format$1 = (datetime, formatString) => {
+        const noEventCode = datetime.errorCode;
+        let datestring = datetime.toFormat(formatString);
+        if (dateFormatKeys[noEventCode]) {
+            datestring += dateFormatKeys[noEventCode];
+        }
+        return datestring;
+    };
     /**
      * Calculates sunrise on the provided date.
      * @param {DateTime} datetime Datetime for which sunrise is calculated. Should
@@ -780,7 +818,7 @@
      */
     const solarNoon = (datetime, longitude) => sunTransit(datetime, longitude);
 
-    const month = {
+    const month$4 = {
         1: 'Bahá',
         2: 'Jalál',
         3: 'Jamál',
@@ -802,7 +840,7 @@
         19: '‘Alá’',
         20: 'Ayyám-i-Há',
     };
-    const monthL = {
+    const monthL$c = {
         1: 'Splendour',
         2: 'Glory',
         3: 'Beauty',
@@ -824,7 +862,7 @@
         19: 'Loftiness',
         20: 'Ayyám-i-Há',
     };
-    const holyDay = {
+    const holyDay$b = {
         1: 'Naw-Rúz',
         2: 'First day of Riḍván',
         3: 'Ninth day of Riḍván',
@@ -838,7 +876,7 @@
         11: 'Ascension of ‘Abdu’l-Bahá',
     };
     // CAREFUL: Numbering corresponds to Badí' week, i.e. 1 is Jalál (-> Saturday)
-    const weekday = {
+    const weekday$4 = {
         1: 'Jalál',
         2: 'Jamál',
         3: 'Kamál',
@@ -847,7 +885,7 @@
         6: 'Istijlál',
         7: 'Istiqlál',
     };
-    const weekdayAbbr3 = {
+    const weekdayAbbr3$4 = {
         1: 'Jal',
         2: 'Jam',
         3: 'Kam',
@@ -856,7 +894,7 @@
         6: 'Isj',
         7: 'Isq',
     };
-    const weekdayAbbr2 = {
+    const weekdayAbbr2$4 = {
         1: 'Jl',
         2: 'Jm',
         3: 'Ka',
@@ -865,7 +903,7 @@
         6: 'Ij',
         7: 'Iq',
     };
-    const weekdayL = {
+    const weekdayL$b = {
         1: 'Glory',
         2: 'Beauty',
         3: 'Perfection',
@@ -874,7 +912,7 @@
         6: 'Majesty',
         7: 'Independence',
     };
-    const yearInVahid = {
+    const yearInVahid$4 = {
         1: 'Alif',
         2: 'Bá’',
         3: 'Ab',
@@ -895,32 +933,32 @@
         18: 'Abhá',
         19: 'Váḥid',
     };
-    const vahid = 'Váḥid';
-    const kulliShay = 'Kull-i-_Sh_ay’';
-    const BE = 'B.E.';
-    const badiCalendar = 'Badí‘ Calendar';
-    const unicodeCharForZero = '0';
-    const defaultFormat = 'd MM+ y BE';
+    const vahid$4 = 'Váḥid';
+    const kulliShay$4 = 'Kull-i-_Sh_ay’';
+    const BE$b = 'B.E.';
+    const badiCalendar$b = 'Badí‘ Calendar';
+    const unicodeCharForZero$2 = '0';
+    const defaultFormat$2 = 'd MM+ y BE';
 
     var en = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        month: month,
-        monthL: monthL,
-        holyDay: holyDay,
-        weekday: weekday,
-        weekdayAbbr3: weekdayAbbr3,
-        weekdayAbbr2: weekdayAbbr2,
-        weekdayL: weekdayL,
-        yearInVahid: yearInVahid,
-        vahid: vahid,
-        kulliShay: kulliShay,
-        BE: BE,
-        badiCalendar: badiCalendar,
-        unicodeCharForZero: unicodeCharForZero,
-        defaultFormat: defaultFormat
+        month: month$4,
+        monthL: monthL$c,
+        holyDay: holyDay$b,
+        weekday: weekday$4,
+        weekdayAbbr3: weekdayAbbr3$4,
+        weekdayAbbr2: weekdayAbbr2$4,
+        weekdayL: weekdayL$b,
+        yearInVahid: yearInVahid$4,
+        vahid: vahid$4,
+        kulliShay: kulliShay$4,
+        BE: BE$b,
+        badiCalendar: badiCalendar$b,
+        unicodeCharForZero: unicodeCharForZero$2,
+        defaultFormat: defaultFormat$2
     });
 
-    const month$1 = {
+    const month$3 = {
         1: 'البهاء',
         2: 'الجلال',
         3: 'الجمال',
@@ -942,8 +980,8 @@
         19: 'العلاء',
         20: 'ايام الهاء',
     };
-    const monthL$1 = month$1;
-    const holyDay$1 = {
+    const monthL$b = month$3;
+    const holyDay$a = {
         1: 'عيد النَّيروز',
         2: 'اليوم الأول من عيد الرِّضوان',
         3: 'اليوم التاسع من عيد الرِّضوان',
@@ -956,7 +994,7 @@
         10: 'يوم الميثاق',
         11: 'يوم صعود حضرة عبد البهاء',
     };
-    const weekday$1 = {
+    const weekday$3 = {
         1: 'الجلال',
         2: 'الجمال',
         3: 'الكمال',
@@ -965,7 +1003,7 @@
         6: 'الأستجلال',
         7: 'الاستقلال',
     };
-    const weekdayAbbr3$1 = {
+    const weekdayAbbr3$3 = {
         1: 'جلا',
         2: 'جما',
         3: 'كما',
@@ -974,7 +1012,7 @@
         6: 'اسج',
         7: 'اسق',
     };
-    const weekdayAbbr2$1 = {
+    const weekdayAbbr2$3 = {
         1: 'جل',
         2: 'جم',
         3: 'كم',
@@ -983,7 +1021,7 @@
         6: 'اج',
         7: 'اق',
     };
-    const weekdayL$1 = {
+    const weekdayL$a = {
         1: 'الجلال',
         2: 'الجمال',
         3: 'الكمال',
@@ -992,7 +1030,7 @@
         6: 'الأستجلال',
         7: 'أستقلال',
     };
-    const yearInVahid$1 = {
+    const yearInVahid$3 = {
         1: 'ألف',
         2: 'باء',
         3: 'أب',
@@ -1013,32 +1051,32 @@
         18: 'ابهى',
         19: 'واحد',
     };
-    const vahid$1 = 'واحد';
-    const kulliShay$1 = 'كل شيء';
-    const BE$1 = 'بديع';
-    const badiCalendar$1 = 'تقويم بديع';
+    const vahid$3 = 'واحد';
+    const kulliShay$3 = 'كل شيء';
+    const BE$a = 'بديع';
+    const badiCalendar$a = 'تقويم بديع';
     const unicodeCharForZero$1 = '٠';
     const defaultFormat$1 = '&#8207;d MM y BE&#8207;';
 
     var ar = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        month: month$1,
-        monthL: monthL$1,
-        holyDay: holyDay$1,
-        weekday: weekday$1,
-        weekdayAbbr3: weekdayAbbr3$1,
-        weekdayAbbr2: weekdayAbbr2$1,
-        weekdayL: weekdayL$1,
-        yearInVahid: yearInVahid$1,
-        vahid: vahid$1,
-        kulliShay: kulliShay$1,
-        BE: BE$1,
-        badiCalendar: badiCalendar$1,
+        month: month$3,
+        monthL: monthL$b,
+        holyDay: holyDay$a,
+        weekday: weekday$3,
+        weekdayAbbr3: weekdayAbbr3$3,
+        weekdayAbbr2: weekdayAbbr2$3,
+        weekdayL: weekdayL$a,
+        yearInVahid: yearInVahid$3,
+        vahid: vahid$3,
+        kulliShay: kulliShay$3,
+        BE: BE$a,
+        badiCalendar: badiCalendar$a,
         unicodeCharForZero: unicodeCharForZero$1,
         defaultFormat: defaultFormat$1
     });
 
-    const monthL$2 = {
+    const monthL$a = {
         1: 'Herrlichkeit',
         2: 'Ruhm',
         3: 'Schönheit',
@@ -1060,7 +1098,7 @@
         19: 'Erhabenheit',
         20: 'Ayyám-i-Há',
     };
-    const holyDay$2 = {
+    const holyDay$9 = {
         1: 'Naw-Rúz',
         2: 'Erster Riḍván-Tag',
         3: 'Neunter Riḍván-Tag',
@@ -1073,7 +1111,7 @@
         10: 'Tag des Bundes',
         11: 'Hinscheiden ‘Abdu’l-Bahás',
     };
-    const weekdayL$2 = {
+    const weekdayL$9 = {
         1: 'Ruhm',
         2: 'Schönheit',
         3: 'Vollkommenheit',
@@ -1082,19 +1120,19 @@
         6: 'Majestät',
         7: 'Unabhängigkeit',
     };
-    const BE$2 = 'B.E.';
-    const badiCalendar$2 = 'Badí‘ Kalender';
+    const BE$9 = 'B.E.';
+    const badiCalendar$9 = 'Badí‘ Kalender';
 
     var de = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        monthL: monthL$2,
-        holyDay: holyDay$2,
-        weekdayL: weekdayL$2,
-        BE: BE$2,
-        badiCalendar: badiCalendar$2
+        monthL: monthL$a,
+        holyDay: holyDay$9,
+        weekdayL: weekdayL$9,
+        BE: BE$9,
+        badiCalendar: badiCalendar$9
     });
 
-    const monthL$3 = {
+    const monthL$9 = {
         1: 'Esplendor',
         2: 'Gloria',
         3: 'Belleza',
@@ -1116,7 +1154,7 @@
         19: 'Sublimidad',
         20: 'Ayyám-i-Há',
     };
-    const holyDay$3 = {
+    const holyDay$8 = {
         1: 'Naw-Rúz',
         2: 'Primer día de Riḍván',
         3: 'Noveno día de Riḍván',
@@ -1129,7 +1167,7 @@
         10: 'Día de la Alianza',
         11: 'Fallecimiento de ‘Abdu’l-Bahá',
     };
-    const weekdayL$3 = {
+    const weekdayL$8 = {
         1: 'Gloria',
         2: 'Belleza',
         3: 'Perfección',
@@ -1138,16 +1176,16 @@
         6: 'Majestuosidad',
         7: 'Independencia',
     };
-    const BE$3 = 'E.B.';
-    const badiCalendar$3 = 'Calendario Badí‘';
+    const BE$8 = 'E.B.';
+    const badiCalendar$8 = 'Calendario Badí‘';
 
     var es = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        monthL: monthL$3,
-        holyDay: holyDay$3,
-        weekdayL: weekdayL$3,
-        BE: BE$3,
-        badiCalendar: badiCalendar$3
+        monthL: monthL$9,
+        holyDay: holyDay$8,
+        weekdayL: weekdayL$8,
+        BE: BE$8,
+        badiCalendar: badiCalendar$8
     });
 
     const month$2 = {
@@ -1172,7 +1210,7 @@
         19: 'العلاء',
         20: 'ايام الهاء',
     };
-    const monthL$4 = {
+    const monthL$8 = {
         1: 'بهاء',
         2: 'جلال',
         3: 'جمال',
@@ -1194,7 +1232,7 @@
         19: 'علاء',
         20: 'ايام ها',
     };
-    const holyDay$4 = {
+    const holyDay$7 = {
         1: 'عید نوروز',
         2: 'روز اوّل عید رضوان',
         3: 'روز نهم عید رضوان',
@@ -1234,7 +1272,7 @@
         6: 'اج',
         7: 'اق',
     };
-    const weekdayL$4 = {
+    const weekdayL$7 = {
         1: 'جلال',
         2: 'جمال',
         3: 'كمال',
@@ -1266,30 +1304,30 @@
     };
     const vahid$2 = 'واحد';
     const kulliShay$2 = 'كل شيء';
-    const BE$4 = 'بديع';
-    const badiCalendar$4 = 'تقويم بديع';
-    const unicodeCharForZero$2 = '۰';
-    const defaultFormat$2 = '&#8207;d MML y BE&#8207;';
+    const BE$7 = 'بديع';
+    const badiCalendar$7 = 'تقويم بديع';
+    const unicodeCharForZero = '۰';
+    const defaultFormat = '&#8207;d MML y BE&#8207;';
 
     var fa = /*#__PURE__*/Object.freeze({
         __proto__: null,
         month: month$2,
-        monthL: monthL$4,
-        holyDay: holyDay$4,
+        monthL: monthL$8,
+        holyDay: holyDay$7,
         weekday: weekday$2,
         weekdayAbbr3: weekdayAbbr3$2,
         weekdayAbbr2: weekdayAbbr2$2,
-        weekdayL: weekdayL$4,
+        weekdayL: weekdayL$7,
         yearInVahid: yearInVahid$2,
         vahid: vahid$2,
         kulliShay: kulliShay$2,
-        BE: BE$4,
-        badiCalendar: badiCalendar$4,
-        unicodeCharForZero: unicodeCharForZero$2,
-        defaultFormat: defaultFormat$2
+        BE: BE$7,
+        badiCalendar: badiCalendar$7,
+        unicodeCharForZero: unicodeCharForZero,
+        defaultFormat: defaultFormat
     });
 
-    const monthL$5 = {
+    const monthL$7 = {
         1: 'Splendeur',
         2: 'Gloire',
         3: 'Beauté',
@@ -1311,7 +1349,7 @@
         19: 'Élévation',
         20: 'Ayyám-i-Há',
     };
-    const holyDay$5 = {
+    const holyDay$6 = {
         1: 'Naw-Rúz',
         2: 'Premier jour de Riḍván',
         3: 'Neuvième jour de Riḍván',
@@ -1324,7 +1362,7 @@
         10: 'Jour de l’Alliance',
         11: 'Ascension de ‘Abdu’l-Bahá',
     };
-    const weekdayL$5 = {
+    const weekdayL$6 = {
         1: 'Gloire',
         2: 'Beauté',
         3: 'Perfection',
@@ -1333,16 +1371,16 @@
         6: 'Majesté',
         7: 'Indépendance',
     };
-    const BE$5 = 'E.B.';
-    const badiCalendar$5 = 'Calendrier Badí‘';
+    const BE$6 = 'E.B.';
+    const badiCalendar$6 = 'Calendrier Badí‘';
 
     var fr = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        monthL: monthL$5,
-        holyDay: holyDay$5,
-        weekdayL: weekdayL$5,
-        BE: BE$5,
-        badiCalendar: badiCalendar$5
+        monthL: monthL$7,
+        holyDay: holyDay$6,
+        weekdayL: weekdayL$6,
+        BE: BE$6,
+        badiCalendar: badiCalendar$6
     });
 
     const monthL$6 = {
@@ -1367,7 +1405,7 @@
         19: 'Cēlums',
         20: 'Ayyám-i-Há',
     };
-    const holyDay$6 = {
+    const holyDay$5 = {
         1: 'Naw-Rúz',
         2: 'Riḍván pirmā diena',
         3: 'Riḍván devītā diena',
@@ -1380,7 +1418,7 @@
         10: 'Derības diena',
         11: '‘Abdu’l-Bahá Debessbraukšana',
     };
-    const weekdayL$6 = {
+    const weekdayL$5 = {
         1: 'Slava',
         2: 'Skaistums',
         3: 'Pilnība',
@@ -1389,19 +1427,19 @@
         6: 'Majestātiskums',
         7: 'Neatkarība',
     };
-    const BE$6 = 'B.Ē.';
-    const badiCalendar$6 = 'Badí‘ kalendārs';
+    const BE$5 = 'B.Ē.';
+    const badiCalendar$5 = 'Badí‘ kalendārs';
 
     var lv = /*#__PURE__*/Object.freeze({
         __proto__: null,
         monthL: monthL$6,
-        holyDay: holyDay$6,
-        weekdayL: weekdayL$6,
-        BE: BE$6,
-        badiCalendar: badiCalendar$6
+        holyDay: holyDay$5,
+        weekdayL: weekdayL$5,
+        BE: BE$5,
+        badiCalendar: badiCalendar$5
     });
 
-    const monthL$7 = {
+    const monthL$5 = {
         1: 'Pracht',
         2: 'Heerlijkheid',
         3: 'Schoonheid',
@@ -1423,7 +1461,7 @@
         19: 'Verhevenheid',
         20: 'Ayyám-i-Há',
     };
-    const holyDay$7 = {
+    const holyDay$4 = {
         1: 'Naw-Rúz',
         2: 'Eerste dag van Riḍván',
         3: 'Negende dag van Riḍván',
@@ -1436,7 +1474,7 @@
         10: 'Dag van het Verbond',
         11: 'Heengaan van ‘Abdu’l-Bahá',
     };
-    const weekdayL$7 = {
+    const weekdayL$4 = {
         1: 'Heerlijkheid',
         2: 'Schoonheid',
         3: 'Volmaaktheid',
@@ -1445,19 +1483,19 @@
         6: 'Majesteit',
         7: 'Onafhankelijkheid',
     };
-    const BE$7 = 'B.E.';
-    const badiCalendar$7 = 'Badí‘-Kalender';
+    const BE$4 = 'B.E.';
+    const badiCalendar$4 = 'Badí‘-Kalender';
 
     var nl = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        monthL: monthL$7,
-        holyDay: holyDay$7,
-        weekdayL: weekdayL$7,
-        BE: BE$7,
-        badiCalendar: badiCalendar$7
+        monthL: monthL$5,
+        holyDay: holyDay$4,
+        weekdayL: weekdayL$4,
+        BE: BE$4,
+        badiCalendar: badiCalendar$4
     });
 
-    const monthL$8 = {
+    const monthL$4 = {
         1: 'Esplendor',
         2: 'Glória',
         3: 'Beleza',
@@ -1479,7 +1517,7 @@
         19: 'Sublimidade',
         20: 'Ayyám-i-Há',
     };
-    const holyDay$8 = {
+    const holyDay$3 = {
         1: 'Naw-Rúz',
         2: '1º dia do Riḍván',
         3: '9º dia do Riḍván',
@@ -1492,7 +1530,7 @@
         10: 'Dia do Convênio',
         11: 'Ascensão de ‘Abdu’l-Bahá',
     };
-    const weekdayL$8 = {
+    const weekdayL$3 = {
         1: 'Glória',
         2: 'Beleza',
         3: 'Perfeição',
@@ -1501,19 +1539,19 @@
         6: 'Majestade',
         7: 'Independência',
     };
-    const BE$8 = 'E.B.';
-    const badiCalendar$8 = 'Calendário Badí‘';
+    const BE$3 = 'E.B.';
+    const badiCalendar$3 = 'Calendário Badí‘';
 
     var pt = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        monthL: monthL$8,
-        holyDay: holyDay$8,
-        weekdayL: weekdayL$8,
-        BE: BE$8,
-        badiCalendar: badiCalendar$8
+        monthL: monthL$4,
+        holyDay: holyDay$3,
+        weekdayL: weekdayL$3,
+        BE: BE$3,
+        badiCalendar: badiCalendar$3
     });
 
-    const month$3 = {
+    const month$1 = {
         1: 'Бахā',
         2: 'Джалāл',
         3: 'Джамāл',
@@ -1535,7 +1573,7 @@
         19: '‘Алā’',
         20: 'Аййāм-и Хā',
     };
-    const monthL$9 = {
+    const monthL$3 = {
         1: 'Великолепие',
         2: 'Слава',
         3: 'Красота',
@@ -1557,7 +1595,7 @@
         19: 'Возвышенность',
         20: 'Аййāм-и Хā',
     };
-    const holyDay$9 = {
+    const holyDay$2 = {
         1: 'Нау-Рӯз',
         2: '1-й день Рид̣вāна',
         3: '9-й день Рид̣вāна',
@@ -1570,7 +1608,7 @@
         10: 'День Завета',
         11: 'Вознесение Абдул-Баха',
     };
-    const weekday$3 = {
+    const weekday$1 = {
         1: 'Джалāл',
         2: 'Джамāл',
         3: 'Камāл',
@@ -1579,7 +1617,7 @@
         6: 'Истиджлāл',
         7: 'Истик̣лāл',
     };
-    const weekdayAbbr3$3 = {
+    const weekdayAbbr3$1 = {
         1: 'Джл',
         2: 'Джм',
         3: 'Кам',
@@ -1588,7 +1626,7 @@
         6: 'Исд',
         7: 'Иск̣',
     };
-    const weekdayAbbr2$3 = {
+    const weekdayAbbr2$1 = {
         1: 'Дл',
         2: 'Дм',
         3: 'Ка',
@@ -1597,7 +1635,7 @@
         6: 'Ид',
         7: 'Ик̣',
     };
-    const weekdayL$9 = {
+    const weekdayL$2 = {
         1: 'Слава',
         2: 'Красота',
         3: 'Совершенство',
@@ -1606,7 +1644,7 @@
         6: 'Величие',
         7: 'Независимость',
     };
-    const yearInVahid$3 = {
+    const yearInVahid$1 = {
         1: 'Алиф',
         2: 'Бā’',
         3: 'Аб',
@@ -1627,28 +1665,28 @@
         18: 'Абхā',
         19: 'Вāх̣ид',
     };
-    const vahid$3 = 'Вāх̣ид';
-    const kulliShay$3 = 'кулл-и шай’';
-    const BE$9 = 'Э.Б.';
-    const badiCalendar$9 = 'Календарь Бадӣ‘';
+    const vahid$1 = 'Вāх̣ид';
+    const kulliShay$1 = 'кулл-и шай’';
+    const BE$2 = 'Э.Б.';
+    const badiCalendar$2 = 'Календарь Бадӣ‘';
 
     var ru = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        month: month$3,
-        monthL: monthL$9,
-        holyDay: holyDay$9,
-        weekday: weekday$3,
-        weekdayAbbr3: weekdayAbbr3$3,
-        weekdayAbbr2: weekdayAbbr2$3,
-        weekdayL: weekdayL$9,
-        yearInVahid: yearInVahid$3,
-        vahid: vahid$3,
-        kulliShay: kulliShay$3,
-        BE: BE$9,
-        badiCalendar: badiCalendar$9
+        month: month$1,
+        monthL: monthL$3,
+        holyDay: holyDay$2,
+        weekday: weekday$1,
+        weekdayAbbr3: weekdayAbbr3$1,
+        weekdayAbbr2: weekdayAbbr2$1,
+        weekdayL: weekdayL$2,
+        yearInVahid: yearInVahid$1,
+        vahid: vahid$1,
+        kulliShay: kulliShay$1,
+        BE: BE$2,
+        badiCalendar: badiCalendar$2
     });
 
-    const monthL$a = {
+    const monthL$2 = {
         1: 'Praktfullhet',
         2: 'Härlighet',
         3: 'Skönhet',
@@ -1670,7 +1708,7 @@
         19: 'Upphöjdhet',
         20: 'Ayyám-i-Há',
     };
-    const holyDay$a = {
+    const holyDay$1 = {
         1: 'Naw-Rúz',
         2: 'Första Riḍván',
         3: 'Nionde Riḍván',
@@ -1683,7 +1721,7 @@
         10: 'Förbundets dag',
         11: '‘Abdu’l-Bahás Bortgång',
     };
-    const weekdayL$a = {
+    const weekdayL$1 = {
         1: 'Härlighet',
         2: 'Skönhet',
         3: 'Fullkomlighet',
@@ -1692,19 +1730,19 @@
         6: 'Majestät',
         7: 'Oberoende',
     };
-    const BE$a = 'B.E.';
-    const badiCalendar$a = 'Badí‘kalendern';
+    const BE$1 = 'B.E.';
+    const badiCalendar$1 = 'Badí‘kalendern';
 
     var sv = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        monthL: monthL$a,
-        holyDay: holyDay$a,
-        weekdayL: weekdayL$a,
-        BE: BE$a,
-        badiCalendar: badiCalendar$a
+        monthL: monthL$2,
+        holyDay: holyDay$1,
+        weekdayL: weekdayL$1,
+        BE: BE$1,
+        badiCalendar: badiCalendar$1
     });
 
-    const month$4 = {
+    const month = {
         1: '巴哈',
         2: '贾拉勒',
         3: '贾迈勒',
@@ -1726,7 +1764,7 @@
         19: '阿拉',
         20: '阿亚米哈',
     };
-    const monthL$b = {
+    const monthL$1 = {
         1: '耀',
         2: '辉',
         3: '美',
@@ -1748,7 +1786,7 @@
         19: '崇',
         20: '哈之日',
     };
-    const holyDay$b = {
+    const holyDay = {
         1: '诺鲁孜节',
         2: '里兹万节第一日',
         3: '里兹万节第九日',
@@ -1761,7 +1799,7 @@
         10: '圣约日',
         11: '阿博都-巴哈升天日',
     };
-    const weekday$4 = {
+    const weekday = {
         1: '贾拉勒',
         2: '贾迈勒',
         3: '卡迈勒',
@@ -1770,7 +1808,7 @@
         6: '伊斯提杰拉勒',
         7: '伊斯提格拉勒',
     };
-    const weekdayAbbr3$4 = {
+    const weekdayAbbr3 = {
         1: '贾拉勒',
         2: '贾迈勒',
         3: '卡迈勒',
@@ -1779,7 +1817,7 @@
         6: '伊斯杰',
         7: '伊斯格',
     };
-    const weekdayAbbr2$4 = {
+    const weekdayAbbr2 = {
         1: '贾拉',
         2: '贾迈',
         3: '卡迈',
@@ -1788,7 +1826,7 @@
         6: '伊杰',
         7: '伊格',
     };
-    const weekdayL$b = {
+    const weekdayL = {
         1: '辉日',
         2: '美日',
         3: '完日',
@@ -1797,7 +1835,7 @@
         6: '威日',
         7: '独日',
     };
-    const yearInVahid$4 = {
+    const yearInVahid = {
         1: '艾利夫',
         2: '巴',
         3: '艾卜',
@@ -1818,35 +1856,35 @@
         18: '阿卜哈',
         19: '瓦希德',
     };
-    const vahid$4 = '瓦希德';
-    const kulliShay$4 = '库里沙伊';
-    const BE$b = 'BE';
-    const badiCalendar$b = '巴迪历';
+    const vahid = '瓦希德';
+    const kulliShay = '库里沙伊';
+    const BE = 'BE';
+    const badiCalendar = '巴迪历';
 
     var zh = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        month: month$4,
-        monthL: monthL$b,
-        holyDay: holyDay$b,
-        weekday: weekday$4,
-        weekdayAbbr3: weekdayAbbr3$4,
-        weekdayAbbr2: weekdayAbbr2$4,
-        weekdayL: weekdayL$b,
-        yearInVahid: yearInVahid$4,
-        vahid: vahid$4,
-        kulliShay: kulliShay$4,
-        BE: BE$b,
-        badiCalendar: badiCalendar$b
+        month: month,
+        monthL: monthL$1,
+        holyDay: holyDay,
+        weekday: weekday,
+        weekdayAbbr3: weekdayAbbr3,
+        weekdayAbbr2: weekdayAbbr2,
+        weekdayL: weekdayL,
+        yearInVahid: yearInVahid,
+        vahid: vahid,
+        kulliShay: kulliShay,
+        BE: BE,
+        badiCalendar: badiCalendar
     });
 
-    const monthL$c = {
+    const monthL = {
         1: 'Splendor',
         16: 'Honor',
     };
 
     var en_us = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        monthL: monthL$c
+        monthL: monthL
     });
 
     /* eslint-disable dot-notation, line-comment-position, camelcase, sort-imports */
@@ -2121,10 +2159,10 @@
             this._invalidReason = undefined;
             try {
                 if (this._isDateObject(date)) {
-                    this._gregorianDate = luxon.DateTime.fromObject({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate(), zone: 'UTC' });
+                    this._gregorianDate = luxon__namespace.DateTime.fromObject({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate(), zone: 'UTC' });
                 }
-                else if (luxon.DateTime.isDateTime(date)) {
-                    this._gregorianDate = luxon.DateTime.fromObject({ year: date.year, month: date.month, day: date.day, zone: 'UTC' });
+                else if (luxon__namespace.DateTime.isDateTime(date)) {
+                    this._gregorianDate = luxon__namespace.DateTime.fromObject({ year: date.year, month: date.month, day: date.day, zone: 'UTC' });
                 }
                 else if (this._isYearMonthDay(date) || this._isYearHolyDayNumber(date)) {
                     this._setFromBadiDate(date);
@@ -2158,8 +2196,8 @@
                 arg.day === undefined && typeof arg.holyDayNumber === 'number';
         }
         _notInValidGregorianDateRange(datetime) {
-            const lowerBound = luxon.DateTime.fromObject({ year: 1844, month: 3, day: 21, zone: 'UTC' });
-            const upperBound = luxon.DateTime.fromObject({ year: 2351, month: 3, day: 20, zone: 'UTC' });
+            const lowerBound = luxon__namespace.DateTime.fromObject({ year: 1844, month: 3, day: 21, zone: 'UTC' });
+            const upperBound = luxon__namespace.DateTime.fromObject({ year: 2351, month: 3, day: 20, zone: 'UTC' });
             return datetime < lowerBound || datetime > upperBound;
         }
         _setFromGregorianDate() {
@@ -2167,15 +2205,15 @@
                 throw new RangeError('Input date outside of valid range (1844-03-21 - 2351-03-20)');
             }
             const gregorianYear = this._gregorianDate.year;
-            const oldImplementationCutoff = luxon.DateTime.fromObject({ year: 2015, month: 3, day: 21, zone: 'UTC' });
+            const oldImplementationCutoff = luxon__namespace.DateTime.fromObject({ year: 2015, month: 3, day: 21, zone: 'UTC' });
             if (this._gregorianDate < oldImplementationCutoff) {
                 const { month, day } = this._gregorianDate;
                 if (month < 3 || (month === 3 && day < 21)) {
-                    this._nawRuz = luxon.DateTime.fromObject({ year: gregorianYear - 1, month: 3, day: 21, zone: 'UTC' });
+                    this._nawRuz = luxon__namespace.DateTime.fromObject({ year: gregorianYear - 1, month: 3, day: 21, zone: 'UTC' });
                     this._year = gregorianYear - 1844;
                 }
                 else {
-                    this._nawRuz = luxon.DateTime.fromObject({ year: gregorianYear, month: 3, day: 21, zone: 'UTC' });
+                    this._nawRuz = luxon__namespace.DateTime.fromObject({ year: gregorianYear, month: 3, day: 21, zone: 'UTC' });
                     this._year = gregorianYear - 1843;
                 }
                 this._setOldAyyamiHaLength();
@@ -2211,7 +2249,7 @@
                 throw new RangeError('Input date outside of valid range (1 - 507 B.E.)');
             }
             else if (this._year < 172) {
-                this._nawRuz = luxon.DateTime.fromObject({ year: 1843 + this._year, month: 3, day: 21, zone: 'UTC' });
+                this._nawRuz = luxon__namespace.DateTime.fromObject({ year: 1843 + this._year, month: 3, day: 21, zone: 'UTC' });
                 this._setOldAyyamiHaLength();
                 this._yearTwinBirthdays = [12, 5, 13, 9];
             }
@@ -2243,10 +2281,10 @@
                 this._holyDay = date.holyDayNumber;
                 [this._month, this._day] = this._holyDayMapping()[this._holyDay];
             }
-            this._gregorianDate = this._nawRuz.plus(luxon.Duration.fromObject({ days: this._dayOfYear([this._year, this._month, this._day]) - 1 }));
+            this._gregorianDate = this._nawRuz.plus(luxon__namespace.Duration.fromObject({ days: this._dayOfYear([this._year, this._month, this._day]) - 1 }));
         }
         _setOldAyyamiHaLength() {
-            if (luxon.DateTime.fromObject({ year: this._nawRuz.year + 1 }).isInLeapYear) {
+            if (luxon__namespace.DateTime.fromObject({ year: this._nawRuz.year + 1 }).isInLeapYear) {
                 this._ayyamiHaLength = 5;
             }
             else {
@@ -2269,7 +2307,7 @@
             // istanbul ignore else
             if (badiYears[0] === 'l4da') {
                 const components = badiYears[this._year - 172].split('');
-                nawRuz = luxon.DateTime.fromObject({ year: this._year - 172 + 2015, month: 3, day: parseInt(components[0], 36), zone: 'UTC' });
+                nawRuz = luxon__namespace.DateTime.fromObject({ year: this._year - 172 + 2015, month: 3, day: parseInt(components[0], 36), zone: 'UTC' });
                 ayyamiHaLength = parseInt(components[1], 36);
                 const TB1 = [parseInt(components[2], 36), parseInt(components[3], 36)];
                 const TB2 = TB1[1] < 19 ? [TB1[0], TB1[1] + 1] : [TB1[0] + 1, 1];
@@ -2277,7 +2315,7 @@
             }
             else {
                 ({ nawRuz, ayyamiHaLength, twinBirthdays } = badiYears[this._year]);
-                nawRuz = luxon.DateTime.fromISO(nawRuz, { zone: 'UTC' });
+                nawRuz = luxon__namespace.DateTime.fromISO(nawRuz, { zone: 'UTC' });
             }
             return { nawRuz, ayyamiHaLength, twinBirthdays };
         }
@@ -2297,12 +2335,12 @@
             return date.diff(this._nawRuz).as('days') + 1;
         }
         _setInvalid(invalidReason) {
-            this._gregorianDate = luxon.DateTime.invalid('Not a valid Badí‘ date');
+            this._gregorianDate = luxon__namespace.DateTime.invalid('Not a valid Badí‘ date');
             this._year = NaN;
             this._month = NaN;
             this._day = NaN;
             this._ayyamiHaLength = NaN;
-            this._nawRuz = luxon.DateTime.invalid('Not a valid Badí‘ date');
+            this._nawRuz = luxon__namespace.DateTime.invalid('Not a valid Badí‘ date');
             this._valid = false;
             this._invalidReason = invalidReason;
         }
@@ -2455,7 +2493,7 @@
             return new BadiDate({ year: this._year, month: this._month, day: this._day - 1 });
         }
     }
-    const badiDateSettings = (settings) => {
+    const badiDateSettings$1 = (settings) => {
         if (settings.defaultLanguage) {
             setDefaultLanguage(settings.defaultLanguage);
         }
@@ -2625,7 +2663,7 @@
             }
         }
         _setInputDateToCorrectDay(date, latitude, longitude) {
-            if (luxon.DateTime.isDateTime(date)) {
+            if (luxon__namespace.DateTime.isDateTime(date)) {
                 const sunset$1 = sunset(date, latitude, longitude);
                 return (date > sunset$1) ? date.plus({ days: 1 }) : date;
             }
@@ -2674,20 +2712,22 @@
             return new LocalBadiDate(this.badiDate.previousDay, this._latitude, this._longitude, this._timezoneId);
         }
     }
-    const badiDateSettings$1 = (settings) => {
+    const badiDateSettings = (settings) => {
         if (typeof settings.defaultLanguage === 'string' ||
             typeof settings.underlineFormat === 'string') {
-            badiDateSettings(settings);
+            badiDateSettings$1(settings);
         }
         if (typeof settings.useClockLocations === 'boolean') {
             useClockLocations(settings.useClockLocations);
         }
     };
     settings({ returnTimeForNoEventCase: true, roundToNearestMinute: true });
+    const format = format$1;
 
     exports.BadiDate = BadiDate;
     exports.LocalBadiDate = LocalBadiDate;
-    exports.badiDateSettings = badiDateSettings$1;
+    exports.badiDateSettings = badiDateSettings;
+    exports.format = format;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

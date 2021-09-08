@@ -6,6 +6,8 @@ export interface BadiYearInfo {
     twinBirthdays: [number, number, number, number];
 }
 
+export type UnderlineFormat = 'css' | 'u' | 'diacritic' | 'none';
+
 export interface BadiDateSettings {
     defaultLanguage?: string;
     underlineFormat?: UnderlineFormat;
@@ -22,8 +24,6 @@ export interface YearHolyDayNumber {
     year: number;
     holyDayNumber: number;
 }
-
-export type UnderlineFormat = 'css' | 'u' | 'diacritic' | 'none';
 
 export type InputDate = luxon.DateTime | Date | YearMonthDay | YearHolyDayNumber;
 

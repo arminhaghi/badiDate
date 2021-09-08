@@ -10,6 +10,28 @@
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.window = global.window || {}, global.luxon));
 }(this, (function (exports, luxon) { 'use strict';
 
+    function _interopNamespace(e) {
+        if (e && e.__esModule) return e;
+        var n = Object.create(null);
+        if (e) {
+            Object.keys(e).forEach(function (k) {
+                if (k !== 'default') {
+                    var d = Object.getOwnPropertyDescriptor(e, k);
+                    Object.defineProperty(n, k, d.get ? d : {
+                        enumerable: true,
+                        get: function () {
+                            return e[k];
+                        }
+                    });
+                }
+            });
+        }
+        n['default'] = e;
+        return Object.freeze(n);
+    }
+
+    var luxon__namespace = /*#__PURE__*/_interopNamespace(luxon);
+
     const month = {
         1: 'Bahá',
         2: 'Jalál',
@@ -422,10 +444,10 @@
             this._invalidReason = undefined;
             try {
                 if (this._isDateObject(date)) {
-                    this._gregorianDate = luxon.DateTime.fromObject({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate(), zone: 'UTC' });
+                    this._gregorianDate = luxon__namespace.DateTime.fromObject({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate(), zone: 'UTC' });
                 }
-                else if (luxon.DateTime.isDateTime(date)) {
-                    this._gregorianDate = luxon.DateTime.fromObject({ year: date.year, month: date.month, day: date.day, zone: 'UTC' });
+                else if (luxon__namespace.DateTime.isDateTime(date)) {
+                    this._gregorianDate = luxon__namespace.DateTime.fromObject({ year: date.year, month: date.month, day: date.day, zone: 'UTC' });
                 }
                 else if (this._isYearMonthDay(date) || this._isYearHolyDayNumber(date)) {
                     this._setFromBadiDate(date);
@@ -459,8 +481,8 @@
                 arg.day === undefined && typeof arg.holyDayNumber === 'number';
         }
         _notInValidGregorianDateRange(datetime) {
-            const lowerBound = luxon.DateTime.fromObject({ year: 1844, month: 3, day: 21, zone: 'UTC' });
-            const upperBound = luxon.DateTime.fromObject({ year: 2351, month: 3, day: 20, zone: 'UTC' });
+            const lowerBound = luxon__namespace.DateTime.fromObject({ year: 1844, month: 3, day: 21, zone: 'UTC' });
+            const upperBound = luxon__namespace.DateTime.fromObject({ year: 2351, month: 3, day: 20, zone: 'UTC' });
             return datetime < lowerBound || datetime > upperBound;
         }
         _setFromGregorianDate() {
@@ -468,15 +490,15 @@
                 throw new RangeError('Input date outside of valid range (1844-03-21 - 2351-03-20)');
             }
             const gregorianYear = this._gregorianDate.year;
-            const oldImplementationCutoff = luxon.DateTime.fromObject({ year: 2015, month: 3, day: 21, zone: 'UTC' });
+            const oldImplementationCutoff = luxon__namespace.DateTime.fromObject({ year: 2015, month: 3, day: 21, zone: 'UTC' });
             if (this._gregorianDate < oldImplementationCutoff) {
                 const { month, day } = this._gregorianDate;
                 if (month < 3 || (month === 3 && day < 21)) {
-                    this._nawRuz = luxon.DateTime.fromObject({ year: gregorianYear - 1, month: 3, day: 21, zone: 'UTC' });
+                    this._nawRuz = luxon__namespace.DateTime.fromObject({ year: gregorianYear - 1, month: 3, day: 21, zone: 'UTC' });
                     this._year = gregorianYear - 1844;
                 }
                 else {
-                    this._nawRuz = luxon.DateTime.fromObject({ year: gregorianYear, month: 3, day: 21, zone: 'UTC' });
+                    this._nawRuz = luxon__namespace.DateTime.fromObject({ year: gregorianYear, month: 3, day: 21, zone: 'UTC' });
                     this._year = gregorianYear - 1843;
                 }
                 this._setOldAyyamiHaLength();
@@ -512,7 +534,7 @@
                 throw new RangeError('Input date outside of valid range (1 - 507 B.E.)');
             }
             else if (this._year < 172) {
-                this._nawRuz = luxon.DateTime.fromObject({ year: 1843 + this._year, month: 3, day: 21, zone: 'UTC' });
+                this._nawRuz = luxon__namespace.DateTime.fromObject({ year: 1843 + this._year, month: 3, day: 21, zone: 'UTC' });
                 this._setOldAyyamiHaLength();
                 this._yearTwinBirthdays = [12, 5, 13, 9];
             }
@@ -544,10 +566,10 @@
                 this._holyDay = date.holyDayNumber;
                 [this._month, this._day] = this._holyDayMapping()[this._holyDay];
             }
-            this._gregorianDate = this._nawRuz.plus(luxon.Duration.fromObject({ days: this._dayOfYear([this._year, this._month, this._day]) - 1 }));
+            this._gregorianDate = this._nawRuz.plus(luxon__namespace.Duration.fromObject({ days: this._dayOfYear([this._year, this._month, this._day]) - 1 }));
         }
         _setOldAyyamiHaLength() {
-            if (luxon.DateTime.fromObject({ year: this._nawRuz.year + 1 }).isInLeapYear) {
+            if (luxon__namespace.DateTime.fromObject({ year: this._nawRuz.year + 1 }).isInLeapYear) {
                 this._ayyamiHaLength = 5;
             }
             else {
@@ -570,7 +592,7 @@
             // istanbul ignore else
             if (badiYears[0] === 'l4da') {
                 const components = badiYears[this._year - 172].split('');
-                nawRuz = luxon.DateTime.fromObject({ year: this._year - 172 + 2015, month: 3, day: parseInt(components[0], 36), zone: 'UTC' });
+                nawRuz = luxon__namespace.DateTime.fromObject({ year: this._year - 172 + 2015, month: 3, day: parseInt(components[0], 36), zone: 'UTC' });
                 ayyamiHaLength = parseInt(components[1], 36);
                 const TB1 = [parseInt(components[2], 36), parseInt(components[3], 36)];
                 const TB2 = TB1[1] < 19 ? [TB1[0], TB1[1] + 1] : [TB1[0] + 1, 1];
@@ -578,7 +600,7 @@
             }
             else {
                 ({ nawRuz, ayyamiHaLength, twinBirthdays } = badiYears[this._year]);
-                nawRuz = luxon.DateTime.fromISO(nawRuz, { zone: 'UTC' });
+                nawRuz = luxon__namespace.DateTime.fromISO(nawRuz, { zone: 'UTC' });
             }
             return { nawRuz, ayyamiHaLength, twinBirthdays };
         }
@@ -598,12 +620,12 @@
             return date.diff(this._nawRuz).as('days') + 1;
         }
         _setInvalid(invalidReason) {
-            this._gregorianDate = luxon.DateTime.invalid('Not a valid Badí‘ date');
+            this._gregorianDate = luxon__namespace.DateTime.invalid('Not a valid Badí‘ date');
             this._year = NaN;
             this._month = NaN;
             this._day = NaN;
             this._ayyamiHaLength = NaN;
-            this._nawRuz = luxon.DateTime.invalid('Not a valid Badí‘ date');
+            this._nawRuz = luxon__namespace.DateTime.invalid('Not a valid Badí‘ date');
             this._valid = false;
             this._invalidReason = invalidReason;
         }

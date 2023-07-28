@@ -2,7 +2,7 @@ import { BadiDate, badiDateSettings, LocalBadiDate } from '../src/localBadiDate'
 import { BadiDate as BadiDateOrig } from '../src/badiDate';
 import { clockLocationFromPolygons } from '../src/clockLocations';
 import * as luxon from 'luxon';
-import { clockMap } from './testData';
+import { clockMap, randomLocalBadiDate } from './testData';
 import { BadiDateSettings } from '../src/types';
 
 const timesString = localBadiDate => (
@@ -293,5 +293,21 @@ describe('the Holy Day commemoration times', () => {
 
             expect(badiDate.holyDayCommemoration.toFormat?.('HH:mm:ss')).toEqual(commemorationTime);
         });
+    });
+});
+
+describe('(de)serialization', () => {
+    it('should serialize and deserialize a LocalBadiDate correctly with JSON.stringify', () => {
+        const localBadiDate = randomLocalBadiDate();
+        const deserializedLocalBadiDate = LocalBadiDate.parse(JSON.stringify(localBadiDate));
+
+        expect(deserializedLocalBadiDate).toEqual(localBadiDate);
+    });
+
+    it('should serialize and deserialize a LocalBadiDate correctly with custom serializer', () => {
+        const localBadiDate = randomLocalBadiDate();
+        const deserializedLocalBadiDate = LocalBadiDate.parse(localBadiDate.toJSON());
+
+        expect(deserializedLocalBadiDate).toEqual(localBadiDate);
     });
 });

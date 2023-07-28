@@ -44,10 +44,13 @@ export class BadiDate {
     holyDay(language?: string): string;
     equals(other: BadiDate): boolean;
     valueOf(): number;
+    toJSON(): YearMonthDay;
+    static parse(input: string | YearMonthDay): BadiDate
 }
 
 export class LocalBadiDate {
     constructor(date: InputDate, latitude: number, longitude: number, timezoneId: string);
+
     badiDate: BadiDate;
     clockLocation: string | undefined;
     end: luxon.DateTime;
@@ -62,6 +65,8 @@ export class LocalBadiDate {
     start: luxon.DateTime;
     sunrise: luxon.DateTime;
     timezoneId: string;
+    toJSON(): { date: YearMonthDay, latitude: number, longitude: number, timezoneId: string };
+    static parse(input: string | { date: YearMonthDay, latitude: number, longitude: number, timezoneId: string }): LocalBadiDate;
 }
 
 export function badiDateSettings(settings: BadiDateSettings): void;

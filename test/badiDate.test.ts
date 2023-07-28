@@ -1,5 +1,5 @@
 import { BadiDate } from '../src/badiDate';
-import { ayyamiHaLengths, UHJListDates } from './testData';
+import { ayyamiHaLengths, randomBadiDate, UHJListDates } from './testData';
 import * as luxon from 'luxon';
 import { badiDateSettings } from '../src/localBadiDate';
 import { HolyDay } from '../src/types';
@@ -24,7 +24,7 @@ describe('BadiDate conversions', () => {
     for (let i = 0; i < 1000; i++) {
         const dayOfYear = Math.floor((Math.random() * 365) + 1);
         const year = Math.floor((Math.random() * 506) + 1845);
-        const initDate = luxon.DateTime.fromObject({ year, ordinal: dayOfYear, zone: 'UTC' });
+        const initDate = luxon.DateTime.fromObject({ year, ordinal: dayOfYear }, { zone: 'UTC' });
         it(`should be stable when re-creating with diff. constructors: ${initDate.toFormat('yyyy-MM-dd')}`, () => {
             const badiDate1 = new BadiDate(initDate);
             const badiDate2 = new BadiDate({ year: badiDate1.year, month: badiDate1.month, day: badiDate1.day });
@@ -34,6 +34,33 @@ describe('BadiDate conversions', () => {
             expect(badiDate4.gregorianDate.toISO()).toEqual(initDate.toISO());
         });
     }
+});
+
+describe('valid date ranges', () => {
+    const validInputDates = [
+        { year: 1, month: 1, day: 1 },
+        { year: 507, month: 19, day: 19 },
+        luxon.DateTime.fromObject({ year: 1844, month: 3, day: 21 }),
+        luxon.DateTime.fromObject({ year: 2351, month: 3, day: 20 }),
+    ];
+    const invalidInputDates = [
+        { year: 0, month: 19, day: 19 },
+        { year: 508, month: 1, day: 1 },
+        luxon.DateTime.fromObject({ year: 1844, month: 3, day: 20 }),
+        luxon.DateTime.fromObject({ year: 2351, month: 3, day: 21 }),
+    ];
+
+    validInputDates.forEach(inputDate => {
+        it('should return a valid date for input dates inside the valid range', () => {
+            expect((new BadiDate(inputDate)).isValid).toBeTruthy();
+        });
+    });
+
+    invalidInputDates.forEach(inputDate => {
+        it('should return an invalid date for input dates outside the valid range', () => {
+            expect((new BadiDate(inputDate)).isValid).toBeFalsy();
+        });
+    });
 });
 
 it('the date should bubble up if set to 5 Ayyám-i-Há for year with only 4', () => {
@@ -379,5 +406,21 @@ describe('the language selection', () => {
 
     it('should use a fallback if the given key is not present in the locale file', () => {
         expect(badiDate.format('MM BE', 'sv')).toEqual('Bahá B.E.');
+    });
+});
+
+describe('(de)serialization', () => {
+    it('should serialize and deserialize a BadiDate correctly with JSON.stringify', () => {
+        const badiDate = randomBadiDate();
+        const deserializedBadiDate = BadiDate.parse(JSON.stringify(badiDate));
+
+        expect(deserializedBadiDate).toEqual(badiDate);
+    });
+
+    it('should serialize and deserialize a BadiDate correctly with custom serializer', () => {
+        const badiDate = randomBadiDate();
+        const deserializedBadiDate = BadiDate.parse(badiDate.toJSON());
+
+        expect(deserializedBadiDate).toEqual(badiDate);
     });
 });

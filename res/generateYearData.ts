@@ -52,7 +52,7 @@ const yearList = () => {
     let shortList = 'const badiYears = [\n';
     // Stop at end of 2350 AD / 507 BE as the Naw-Rúz 509 BE is potentially too
     // close to call
-    const equinoxesLength = 337;
+    const equinoxesLength = 338;
     for (let i = 0; i < equinoxesLength - 1; i++) {
         const nawRuzTihran = nawRuzEndTihranUTC(equinoxes[i]);
         const nextNawRuzTihran = nawRuzEndTihranUTC(equinoxes[i + 1]);
@@ -65,7 +65,7 @@ const yearList = () => {
         twinBirthdays: [${twinBirthdays[0]}, ${twinBirthdays[1]}, ${twinBirthdays[2]}, ${twinBirthdays[3]}],
     },`;
         shortList += `${i % 14 === 0 ? '    ' : ''}'${shortListString(
-            nawRuzTihran, ayyamiHaLength, twinBirthdays)}',${i % 14 === 13 ? '\n' : ' '}`;
+            nawRuzTihran, ayyamiHaLength, twinBirthdays)}',${i % 14 === 13 || i === 336 ? '\n' : ' '}`;
     }
     shortList += '];\n\nexport { badiYears };\n';
     longList += '\n};\n\nexport { badiYears };\n';

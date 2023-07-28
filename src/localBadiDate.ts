@@ -2,7 +2,7 @@ import * as MeeusSunMoon from 'meeussunmoon';
 import * as luxon from 'luxon';
 import { BadiDate, badiDateSettings as badiDateBaseSettings } from './badiDate';
 import { clockLocationFromPolygons, useClockLocations } from './clockLocations';
-import { BadiDateSettings, InputDate } from './types';
+import { BadiDateSettings, InputDate, YearMonthDay } from './types';
 
 /* eslint-disable complexity */
 
@@ -145,6 +145,20 @@ class LocalBadiDate {
 
     get previousDay(): LocalBadiDate {
         return new LocalBadiDate(this.badiDate.previousDay, this._latitude, this._longitude, this._timezoneId);
+    }
+
+    toJSON(): { date: YearMonthDay, latitude: number, longitude: number, timezoneId: string } {
+        return {
+            date: this._badiDate.toJSON(),
+            latitude: this._latitude,
+            longitude: this._longitude,
+            timezoneId: this._timezoneId,
+        };
+    }
+
+    static parse(input: string | { date: YearMonthDay, latitude: number, longitude: number, timezoneId: string }) {
+        const { date, latitude, longitude, timezoneId } = typeof input === 'string' ? JSON.parse(input) : input;
+        return new LocalBadiDate(date, latitude, longitude, timezoneId);
     }
 }
 

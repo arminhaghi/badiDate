@@ -262,6 +262,10 @@ class BadiDate {
         return this.isValid && other.isValid && this.valueOf() === other.valueOf();
     }
 
+    toJSON(): YearMonthDay {
+        return { year: this._year, month: this._month, day: this._day };
+    }
+
     get isValid(): boolean {
         return this._valid;
     }
@@ -375,6 +379,10 @@ class BadiDate {
             });
         }
         return new BadiDate({ year: this._year, month: this._month, day: this._day - 1 });
+    }
+
+    static parse(input: string | YearMonthDay): BadiDate {
+        return typeof input === 'string' ? new BadiDate(JSON.parse(input)) : new BadiDate(input);
     }
 }
 

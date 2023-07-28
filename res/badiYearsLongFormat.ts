@@ -1679,6 +1679,11 @@ const badiYears = {
         nawRuz: '2350-03-21',
         twinBirthdays: [12, 18, 12, 19],
     },
+    508: {
+        ayyamiHaLength: 5,
+        nawRuz: '2351-03-21',
+        twinBirthdays: [12, 7, 12, 8],
+    },
 };
 
 export { badiYears };

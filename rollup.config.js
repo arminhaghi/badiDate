@@ -33,6 +33,7 @@ const rollupConfig = (root, msm, locales, minify, format, filename) => {
             format,
             name: format === 'es' ? 'badiDate' : 'window',
             globals: format === 'es' ? {} : { luxon: 'luxon', meeussunmoon: 'MeeusSunMoon' },
+            interop: 'esModule',
         },
         plugins: [resolve({ modulesOnly: true }), typescript()],
     };

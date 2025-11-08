@@ -19,7 +19,7 @@ Files with `-msm` in the name have the MeeusSunMoon module bundled in. For usage
 version of MeeusSunMoon see below.
 
 Files with `-locales` in the name include all currently available locales, files without only include the english locale.
-Creating bundles with a custom set of bundled locales is also possible (see `rollup.config.js`)
+Creating bundles with a custom set of bundled locales is also possible (see `rollup.config.mjs`)
 
 Files ending in `.mjs` ES6 modules, files without are packed as UMD modules.
 
@@ -295,12 +295,12 @@ language you wish to contribute.
 by the fallback. Don't forget to also remove entries that no longer exist above from the export statement.
 3. Add the appropriate lines for your language to `src/badiLocale.ts`. Note that for regional variants, the variable names
 need to use an underscore instead of a hyphen.
-4. Add the appropriate entr(y/ies) to `localeRegex` in `rollup.config.js`. Note that for regional variants, entries with
+4. Add the appropriate entr(y/ies) to `localeRegex` in `rollup.config.mjs`. Note that for regional variants, entries with
 both hyphen and underscore are required.
 
 ### Bundles With Custom Locale Sets
 
-`rollup.config.js` is set up to allow bundling custom sets of languages if desired. For this, simply pass an array of
+`rollup.config.mjs` is set up to allow bundling custom sets of languages if desired. For this, simply pass an array of
 locale strings to `rollupConfig()` and set the filename with the optional `filename` parameter. Note that for regional
 variants, entries with both hyphen and underscore are required.
 

@@ -128,5 +128,19 @@ const badiCalendar = 'Badí‘ Calendar';
 const unicodeCharForZero = '0';
 const defaultFormat = 'd MM+ y BE';
 
-export { month, monthL, holyDay, weekday, weekdayAbbr3, weekdayAbbr2, weekdayL, yearInVahid, vahid, kulliShay, BE,
-    badiCalendar, unicodeCharForZero, defaultFormat };
+export {
+    month,
+    monthL,
+    holyDay,
+    weekday,
+    weekdayAbbr3,
+    weekdayAbbr2,
+    weekdayL,
+    yearInVahid,
+    vahid,
+    kulliShay,
+    BE,
+    badiCalendar,
+    unicodeCharForZero,
+    defaultFormat,
+};

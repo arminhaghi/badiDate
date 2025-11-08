@@ -1,4 +1,4 @@
-import * as luxon from 'luxon';
+import { DateTime } from 'luxon';
 
 export interface YearMonthDay {
     year: number;
@@ -11,7 +11,7 @@ export interface YearHolyDayNumber {
     holyDayNumber: number;
 }
 
-export type InputDate = luxon.DateTime | Date | YearMonthDay | YearHolyDayNumber;
+export type InputDate = DateTime | Date | YearMonthDay | YearHolyDayNumber;
 
 export type UnderlineFormat = 'css' | 'u' | 'diacritic' | 'none';
 
@@ -25,7 +25,7 @@ export class BadiDate {
     constructor(date: InputDate);
     ayyamiHaLength: number;
     day: number;
-    gregorianDate: luxon.DateTime;
+    gregorianDate: DateTime;
     holyDayNumber: number | undefined;
     invalidReason: string | undefined;
     isValid: boolean;
@@ -49,24 +49,36 @@ export class BadiDate {
 }
 
 export class LocalBadiDate {
-    constructor(date: InputDate, latitude: number, longitude: number, timezoneId: string);
+    constructor(
+        date: InputDate,
+        latitude: number,
+        longitude: number,
+        timezoneId: string,
+        options?: LocalBadiDateOptions
+    );
 
     badiDate: BadiDate;
     clockLocation: string | undefined;
-    end: luxon.DateTime;
-    holyDayCommemoration: luxon.DateTime | undefined;
+    end: DateTime;
+    holyDayCommemoration: DateTime | undefined;
     latitude: number;
     longitude: number;
     nextDay: LocalBadiDate;
     nextMonth: LocalBadiDate;
     previousDay: LocalBadiDate;
     previousMonth: LocalBadiDate;
-    solarNoon: luxon.DateTime;
-    start: luxon.DateTime;
-    sunrise: luxon.DateTime;
+    solarNoon: DateTime;
+    start: DateTime;
+    sunrise: DateTime;
     timezoneId: string;
     toJSON(): { date: YearMonthDay, latitude: number, longitude: number, timezoneId: string };
     static parse(input: string | { date: YearMonthDay, latitude: number, longitude: number, timezoneId: string }): LocalBadiDate;
 }
 
 export function badiDateSettings(settings: BadiDateSettings): void;
+
+export interface LocalBadiDateOptions {
+    useClockLocations?: boolean;
+}
+
+export { DateTime };

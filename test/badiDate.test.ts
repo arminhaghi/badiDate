@@ -1,8 +1,8 @@
+import { DateTime } from 'luxon';
 import { BadiDate } from '../src/badiDate';
-import { ayyamiHaLengths, randomBadiDate, UHJListDates } from './testData';
-import * as luxon from 'luxon';
 import { badiDateSettings } from '../src/localBadiDate';
 import { HolyDay } from '../src/types';
+import { ayyamiHaLengths, randomBadiDate, UHJListDates } from './testData';
 
 describe('Dates for Naw-Rúz and the Twin Holy Days should agree with the UHJ List 172-221', () => {
     for (let i = 0; i < 50; i++) {
@@ -12,19 +12,19 @@ describe('Dates for Naw-Rúz and the Twin Holy Days should agree with the UHJ Li
             const birthOfBahaullah = new BadiDate({ year: i + 172, holyDayNumber: 9 });
 
             expect(nawRuz.gregorianDate.toFormat('yyyy-MM-dd')).toEqual(UHJListDates[i][0]);
-            expect([birthOfTheBab.month, birthOfTheBab.day])
-                .toEqual((UHJListDates[i][2] as number[]).slice(0, 2));
-            expect([birthOfBahaullah.month, birthOfBahaullah.day])
-                .toEqual((UHJListDates[i][2] as number[]).slice(2, 4));
+            expect([birthOfTheBab.month, birthOfTheBab.day]).toEqual((UHJListDates[i][2] as number[]).slice(0, 2));
+            expect([birthOfBahaullah.month, birthOfBahaullah.day]).toEqual(
+                (UHJListDates[i][2] as number[]).slice(2, 4),
+            );
         });
     }
 });
 
 describe('BadiDate conversions', () => {
     for (let i = 0; i < 1000; i++) {
-        const dayOfYear = Math.floor((Math.random() * 365) + 1);
-        const year = Math.floor((Math.random() * 506) + 1845);
-        const initDate = luxon.DateTime.fromObject({ year, ordinal: dayOfYear }, { zone: 'UTC' });
+        const dayOfYear = Math.floor(Math.random() * 365 + 1);
+        const year = Math.floor(Math.random() * 506 + 1845);
+        const initDate = DateTime.fromObject({ year, ordinal: dayOfYear }, { zone: 'UTC' });
         it(`should be stable when re-creating with diff. constructors: ${initDate.toFormat('yyyy-MM-dd')}`, () => {
             const badiDate1 = new BadiDate(initDate);
             const badiDate2 = new BadiDate({ year: badiDate1.year, month: badiDate1.month, day: badiDate1.day });
@@ -40,25 +40,25 @@ describe('valid date ranges', () => {
     const validInputDates = [
         { year: 1, month: 1, day: 1 },
         { year: 507, month: 19, day: 19 },
-        luxon.DateTime.fromObject({ year: 1844, month: 3, day: 21 }),
-        luxon.DateTime.fromObject({ year: 2351, month: 3, day: 20 }),
+        DateTime.fromObject({ year: 1844, month: 3, day: 21 }),
+        DateTime.fromObject({ year: 2351, month: 3, day: 20 }),
     ];
     const invalidInputDates = [
         { year: 0, month: 19, day: 19 },
         { year: 508, month: 1, day: 1 },
-        luxon.DateTime.fromObject({ year: 1844, month: 3, day: 20 }),
-        luxon.DateTime.fromObject({ year: 2351, month: 3, day: 21 }),
+        DateTime.fromObject({ year: 1844, month: 3, day: 20 }),
+        DateTime.fromObject({ year: 2351, month: 3, day: 21 }),
     ];
 
-    validInputDates.forEach(inputDate => {
+    validInputDates.forEach((inputDate) => {
         it('should return a valid date for input dates inside the valid range', () => {
-            expect((new BadiDate(inputDate)).isValid).toBeTruthy();
+            expect(new BadiDate(inputDate).isValid).toBeTruthy();
         });
     });
 
-    invalidInputDates.forEach(inputDate => {
+    invalidInputDates.forEach((inputDate) => {
         it('should return an invalid date for input dates outside the valid range', () => {
-            expect((new BadiDate(inputDate)).isValid).toBeFalsy();
+            expect(new BadiDate(inputDate).isValid).toBeFalsy();
         });
     });
 });
@@ -72,8 +72,8 @@ it('the date should bubble up if set to 5 Ayyám-i-Há for year with only 4', ()
 
 describe('the date component getters', () => {
     for (let badiYear = 1; badiYear < 508; badiYear++) {
-        const badiMonth = Math.floor((Math.random() * 19) + 1);
-        const badiDay = Math.floor((Math.random() * 19) + 1);
+        const badiMonth = Math.floor(Math.random() * 19 + 1);
+        const badiDay = Math.floor(Math.random() * 19 + 1);
         const badiDate = new BadiDate({ year: badiYear, month: badiMonth, day: badiDay });
 
         it(`should return the correct day for [${badiYear}, ${badiMonth}, ${badiDay}]`, () => {
@@ -97,7 +97,7 @@ describe('the date component getters', () => {
         });
 
         it(`should return the correct Kull-i-Shay for [${badiYear}, ${badiMonth}, ${badiDay}]`, () => {
-            expect(badiDate.kullIShay).toEqual((badiYear < 362) ? 1 : 2);
+            expect(badiDate.kullIShay).toEqual(badiYear < 362 ? 1 : 2);
         });
 
         it(`should return the correct Ayyam-i-Há length for [${badiYear}, ${badiMonth}, ${badiDay}]`, () => {
@@ -105,7 +105,7 @@ describe('the date component getters', () => {
         });
 
         it(`should return the correct weekday for [${badiYear}, ${badiMonth}, ${badiDay}]`, () => {
-            expect(badiDate.weekday).toEqual((badiDate.gregorianDate.weekday + 1) % 7 + 1);
+            expect(badiDate.weekday).toEqual(((badiDate.gregorianDate.weekday + 1) % 7) + 1);
         });
     }
 });
@@ -134,54 +134,58 @@ describe('Holy Days', () => {
     });
 
     const holyDays = [
-        { date: { year: 172, holyDayNumber: HolyDay.NawRuz },
-            expectedOutput: 'Naw-Rúz',
-            workSuspended: true,
-        },
-        { date: { year: 172, holyDayNumber: HolyDay.FirstRidvan },
+        { date: { year: 172, holyDayNumber: HolyDay.NawRuz }, expectedOutput: 'Naw-Rúz', workSuspended: true },
+        {
+            date: { year: 172, holyDayNumber: HolyDay.FirstRidvan },
             expectedOutput: 'First day of Riḍván',
             workSuspended: true,
         },
-        { date: { year: 172, holyDayNumber: HolyDay.NinthRidvan },
+        {
+            date: { year: 172, holyDayNumber: HolyDay.NinthRidvan },
             expectedOutput: 'Ninth day of Riḍván',
             workSuspended: true,
         },
-        { date: { year: 172, holyDayNumber: HolyDay.TwelfthRidvan },
+        {
+            date: { year: 172, holyDayNumber: HolyDay.TwelfthRidvan },
             expectedOutput: 'Twelfth day of Riḍván',
             workSuspended: true,
         },
-        { date: { year: 172, holyDayNumber: HolyDay.DeclarationOfTheBab },
+        {
+            date: { year: 172, holyDayNumber: HolyDay.DeclarationOfTheBab },
             expectedOutput: 'Declaration of the Báb',
             workSuspended: true,
         },
-        { date: { year: 172, holyDayNumber: HolyDay.AscensionOfBahaullah },
+        {
+            date: { year: 172, holyDayNumber: HolyDay.AscensionOfBahaullah },
             expectedOutput: 'Ascension of Bahá’u’lláh',
             workSuspended: true,
         },
-        { date: { year: 172, holyDayNumber: HolyDay.MartyrdomOfTheBab },
+        {
+            date: { year: 172, holyDayNumber: HolyDay.MartyrdomOfTheBab },
             expectedOutput: 'Martyrdom of the Báb',
             workSuspended: true,
         },
-        { date: { year: 172, holyDayNumber: HolyDay.BirthOfTheBab },
+        {
+            date: { year: 172, holyDayNumber: HolyDay.BirthOfTheBab },
             expectedOutput: 'Birth of the Báb',
             workSuspended: true,
         },
-        { date: { year: 172, holyDayNumber: HolyDay.BirthOfBahaullah },
+        {
+            date: { year: 172, holyDayNumber: HolyDay.BirthOfBahaullah },
             expectedOutput: 'Birth of Bahá’u’lláh',
             workSuspended: true,
         },
-        { date: { year: 172, holyDayNumber: HolyDay.DayOfTheCovenant },
+        {
+            date: { year: 172, holyDayNumber: HolyDay.DayOfTheCovenant },
             expectedOutput: 'Day of the Covenant',
             workSuspended: false,
         },
-        { date: { year: 172, holyDayNumber: HolyDay.AscensionOfAbdulBaha },
+        {
+            date: { year: 172, holyDayNumber: HolyDay.AscensionOfAbdulBaha },
             expectedOutput: 'Ascension of ‘Abdu’l-Bahá',
             workSuspended: false,
         },
-        { date: { year: 172, month: 1, day: 2 },
-            expectedOutput: '',
-            workSuspended: undefined,
-        },
+        { date: { year: 172, month: 1, day: 2 }, expectedOutput: '', workSuspended: undefined },
     ];
 
     holyDays.forEach(({ date, expectedOutput }) => {
@@ -223,14 +227,14 @@ describe('Holy Days', () => {
 describe('Invalid input', () => {
     const invalidInputDates = [
         'someString',
-        luxon.DateTime.fromISO('2360-01-01', { zone: 'UTC' }),
+        DateTime.fromISO('2360-01-01', { zone: 'UTC' }),
         { year: 508, month: 10, day: 10 },
         { year: 172, month: 20, day: 6 },
         { year: 172, month: 10, day: 25 },
         { year: 172, holyDayNumber: 12 },
     ];
 
-    invalidInputDates.forEach(inputDate => {
+    invalidInputDates.forEach((inputDate) => {
         it('should produce an invalid Badí date', () => {
             const badiDate = new BadiDate(inputDate as any);
 
@@ -261,7 +265,8 @@ describe('the string formatter', () => {
         badiDateSettings({ underlineFormat: 'diacritic' });
         const badiDate = new BadiDate({ year: 50, month: 1, day: 16 });
         const formatStr = 'd dd D DD DDL DD+ m mm M MM MML MM+ y yy ww W WW WWL yv yyv YV v vv Va k kk KiS BE BC';
-        const expectedResult = '16 16 S̲h̲a S̲h̲araf Honour S̲h̲araf (Honour) 1 01 Bah Bahá Splendour ' +
+        const expectedResult =
+            '16 16 S̲h̲a S̲h̲araf Honour S̲h̲araf (Honour) 1 01 Bah Bahá Splendour ' +
             'Bahá (Splendour) 50 050 ‘Id ‘Idá ‘Idál Justice 12 12 Javáb 3 03 Váḥid 1 01 Kull-i-S̲h̲ay’ B.E. ' +
             'Badí‘ Calendar';
 

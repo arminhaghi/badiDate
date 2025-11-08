@@ -1,12 +1,12 @@
-import { badiLocale, underlineFormat } from './badiLocale';
 import { BadiDate } from './badiDate';
+import { badiLocale, underlineFormat } from './badiLocale';
 
 const formatTokens: Array<Array<string>> = [
     ['DDL', 'DD+', 'MML', 'MM+', 'WWL', 'yyv', 'KiS'],
     ['dd', 'DD', 'mm', 'MM', 'ww', 'WW', 'yv', 'YV', 'vv', 'kk', 'yy', 'BE', 'BC', 'Va'],
-    ['d', 'D', 'm', 'M', 'W', 'v', 'k', 'y']];
+    ['d', 'D', 'm', 'M', 'W', 'v', 'k', 'y'],
+];
 
-// eslint-disable-next-line complexity
 const formatBadiDate = (badiDate: BadiDate, formatString?: string, language?: string): string => {
     if (!badiDate.isValid) {
         return 'Not a valid Badí‘ date';
@@ -54,7 +54,6 @@ const formatBadiDate = (badiDate: BadiDate, formatString?: string, language?: st
     return formattedDate;
 };
 
-// eslint-disable-next-line complexity
 const getFormatItem = (badiDate: BadiDate, token: string, language: string): string => {
     switch (token) {
         // Single character tokens
@@ -67,7 +66,7 @@ const getFormatItem = (badiDate: BadiDate, token: string, language: string): str
         case 'M':
             return postProcessLocaleItem(formatItemFallback(language, 'month', badiDate.month), 3);
         case 'W':
-            return formatItemFallback(language, 'weekdayAbbr3', (badiDate.gregorianDate.weekday + 1) % 7 + 1);
+            return formatItemFallback(language, 'weekdayAbbr3', ((badiDate.gregorianDate.weekday + 1) % 7) + 1);
         case 'y':
             return digitRewrite(badiDate.year, language);
         case 'v':
@@ -76,28 +75,30 @@ const getFormatItem = (badiDate: BadiDate, token: string, language: string): str
             return digitRewrite(Math.floor((badiDate.year - 1) / 361) + 1, language);
         // Two character tokens
         case 'dd':
-            return digitRewrite((`0${String(badiDate.day)}`).slice(-2), language);
+            return digitRewrite(`0${String(badiDate.day)}`.slice(-2), language);
         case 'DD':
             return postProcessLocaleItem(formatItemFallback(language, 'month', badiDate.day));
         case 'mm':
-            return digitRewrite((`0${String(badiDate.month)}`).slice(-2), language);
+            return digitRewrite(`0${String(badiDate.month)}`.slice(-2), language);
         case 'MM':
             return postProcessLocaleItem(formatItemFallback(language, 'month', badiDate.month));
         case 'ww':
-            return formatItemFallback(language, 'weekdayAbbr2', (badiDate.gregorianDate.weekday + 1) % 7 + 1);
+            return formatItemFallback(language, 'weekdayAbbr2', ((badiDate.gregorianDate.weekday + 1) % 7) + 1);
         case 'WW':
-            return formatItemFallback(language, 'weekday', (badiDate.gregorianDate.weekday + 1) % 7 + 1);
+            return formatItemFallback(language, 'weekday', ((badiDate.gregorianDate.weekday + 1) % 7) + 1);
         case 'yy':
-            return digitRewrite((`00${String(badiDate.year)}`).slice(-3), language);
+            return digitRewrite(`00${String(badiDate.year)}`.slice(-3), language);
         case 'yv':
-            return digitRewrite((badiDate.year - 1) % 19 + 1, language);
+            return digitRewrite(((badiDate.year - 1) % 19) + 1, language);
         case 'YV':
-            return formatItemFallback(language, 'yearInVahid', (badiDate.year - 1) % 19 + 1);
+            return formatItemFallback(language, 'yearInVahid', ((badiDate.year - 1) % 19) + 1);
         case 'vv':
             return digitRewrite(
-                (`0${String((Math.floor((badiDate.year - 1) / 19) + 2) % 19 - 1)}`).slice(-2), language);
+                `0${String(((Math.floor((badiDate.year - 1) / 19) + 2) % 19) - 1)}`.slice(-2),
+                language,
+            );
         case 'kk':
-            return digitRewrite((`0${String(Math.floor((badiDate.year - 1) / 361) + 1)}`).slice(-2), language);
+            return digitRewrite(`0${String(Math.floor((badiDate.year - 1) / 361) + 1)}`.slice(-2), language);
         case 'Va':
             return formatItemFallback(language, 'vahid');
         case 'BE':
@@ -132,9 +133,9 @@ const getFormatItem = (badiDate: BadiDate, token: string, language: string): str
             return `${month} (${monthL})`;
         }
         case 'WWL':
-            return formatItemFallback(language, 'weekdayL', (badiDate.gregorianDate.weekday + 1) % 7 + 1);
+            return formatItemFallback(language, 'weekdayL', ((badiDate.gregorianDate.weekday + 1) % 7) + 1);
         case 'yyv':
-            return digitRewrite((`0${String((badiDate.year - 1) % 19 + 1)}`).slice(-2), language);
+            return digitRewrite(`0${String(((badiDate.year - 1) % 19) + 1)}`.slice(-2), language);
         case 'KiS':
             return postProcessLocaleItem(formatItemFallback(language, 'kulliShay'));
         // istanbul ignore next
@@ -173,7 +174,10 @@ const underlineString = (str: string): string => {
         case 'css':
             return `<span style="text-decoration:underline">${str}</span>`;
         case 'diacritic':
-            return str.split('').map(char => `${char}\u0332`).join('');
+            return str
+                .split('')
+                .map((char) => `${char}\u0332`)
+                .join('');
         case 'u':
             return `<u>${str}</u>`;
         case 'none':
@@ -190,7 +194,7 @@ const digitRewrite = (number: number | string, language: string): string => {
     if (unicodeOffset === 0) {
         return number;
     }
-    const codePoints = [...number].map(num => num.charCodeAt(0) + unicodeOffset);
+    const codePoints = [...number].map((num) => num.charCodeAt(0) + unicodeOffset);
     return String.fromCharCode(...codePoints);
 };
 
@@ -210,7 +214,6 @@ const formatItemFallback = (language: string, category: string, index?: number):
 const languageFallback = (languageCode: string): string => {
     if (languageCode.includes('-')) {
         return languageCode.split('-')[0];
-        // eslint-disable-next-line no-negated-condition
     } else if (languageCode !== 'default') {
         return 'default';
     }

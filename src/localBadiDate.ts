@@ -1,40 +1,43 @@
+import { DateTime } from 'luxon';
 import * as MeeusSunMoon from 'meeussunmoon';
-import * as luxon from 'luxon';
 import { BadiDate, badiDateSettings as badiDateBaseSettings } from './badiDate';
 import { clockLocationFromPolygons, useClockLocations } from './clockLocations';
-import { BadiDateSettings, InputDate, YearMonthDay } from './types';
-
-/* eslint-disable complexity */
+import { BadiDateSettings, InputDate, LocalBadiDateOptions, YearMonthDay } from './types';
 
 class LocalBadiDate {
-    private _badiDate: BadiDate;
-    private _start: luxon.DateTime;
-    private _sunrise: luxon.DateTime;
-    private _solarNoon: luxon.DateTime;
-    private _end: luxon.DateTime;
-    private _clockLocation: string | undefined;
-    private _holyDayCommemoration: luxon.DateTime | undefined;
-    private _latitude: number;
-    private _longitude: number;
-    private _timezoneId: string;
+    private readonly _badiDate: BadiDate;
+    private readonly _start: DateTime;
+    private readonly _sunrise: DateTime;
+    private readonly _solarNoon: DateTime;
+    private readonly _end: DateTime;
+    private readonly _clockLocation: string | undefined;
+    private readonly _holyDayCommemoration: DateTime | undefined;
+    private readonly _latitude: number;
+    private readonly _longitude: number;
+    private readonly _timezoneId: string;
 
-    constructor(date: InputDate, latitude: number, longitude: number, timezoneId: string) {
+    constructor(
+        date: InputDate,
+        latitude: number,
+        longitude: number,
+        timezoneId: string,
+        options: LocalBadiDateOptions = {},
+    ) {
         this._latitude = latitude;
         this._longitude = longitude;
         this._timezoneId = timezoneId;
         // If a datetime object is being passed, we use date and time, not just the
         // date. For a JS Date object, we can't assume it's in the correct timezone,
         // so in that case we use the date information only.
+        this._clockLocation = clockLocationFromPolygons(latitude, longitude, options.useClockLocations);
         this._badiDate = new BadiDate(this._setInputDateToCorrectDay(date, latitude, longitude));
         const gregDate = this._badiDate.gregorianDate.setZone(timezoneId, { keepLocalTime: true });
-        this._clockLocation = clockLocationFromPolygons(latitude, longitude);
-        if (!this._clockLocation ||
-            (this._clockLocation === 'Finland' &&
-                this._badiDate.month === 19)) {
-            this._end = MeeusSunMoon.sunset(gregDate, latitude, longitude) as luxon.DateTime;
-            this._solarNoon = MeeusSunMoon.solarNoon(gregDate, longitude);
-            this._sunrise = MeeusSunMoon.sunrise(gregDate, latitude, longitude) as luxon.DateTime;
-            this._start = MeeusSunMoon.sunset(gregDate.minus({ days: 1 }), latitude, longitude) as luxon.DateTime;
+        // Should be 1 Ala still start at clocktime, 19 Ala end on sunset
+        if (!this._clockLocation || (this._clockLocation === 'Finland' && this._badiDate.month === 19)) {
+            this._end = MeeusSunMoon.sunset(gregDate, latitude, longitude) as DateTime;
+            this._solarNoon = MeeusSunMoon.solarNoon(gregDate, longitude) as DateTime;
+            this._sunrise = MeeusSunMoon.sunrise(gregDate, latitude, longitude) as DateTime;
+            this._start = MeeusSunMoon.sunset(gregDate.minus({ days: 1 }), latitude, longitude) as DateTime;
         } else {
             // First we set times to 18:00, 06:00, 12:00, 18:00, modifications are
             // then made depending on the region.
@@ -46,8 +49,7 @@ class LocalBadiDate {
                 this._sunrise = this._sunrise.plus({ minutes: 30 });
             } else if (this._clockLocation === 'Iceland') {
                 this._solarNoon = this._solarNoon.plus({ hours: 1 });
-            } else if (this._clockLocation === 'Finland' ||
-                this._clockLocation === 'USA') {
+            } else if (this._clockLocation === 'Finland' || this._clockLocation === 'USA') {
                 if (this._end.isInDST) {
                     this._sunrise = this._sunrise.plus({ hours: 1 });
                     this._solarNoon = this._solarNoon.plus({ hours: 1 });
@@ -56,6 +58,14 @@ class LocalBadiDate {
                 if (this._start.isInDST) {
                     this._start = this._start.plus({ hours: 1 });
                 }
+            }
+        }
+        if (this._clockLocation === 'Finland') {
+            if (this._badiDate.month === 20 && this._badiDate.day === this._badiDate.ayyamiHaLength) {
+                this._end = MeeusSunMoon.sunset(gregDate, latitude, longitude) as DateTime;
+            }
+            if (this._badiDate.month === 1 && this._badiDate.day === 1) {
+                this._start = MeeusSunMoon.sunset(gregDate.minus({ days: 1 }), latitude, longitude) as DateTime;
             }
         }
         switch (this._badiDate.holyDayNumber) {
@@ -79,39 +89,52 @@ class LocalBadiDate {
                 // Ascension of 'Abdu'l-Bahá: 01:00 local standard time
                 this._holyDayCommemoration = gregDate.set({ hour: gregDate.isInDST ? 2 : 1 });
                 break;
-            // skip default
+            default:
+                break;
         }
     }
 
-    _setInputDateToCorrectDay(date: InputDate, latitude, longitude): InputDate {
-        if (luxon.DateTime.isDateTime(date)) {
-            const sunset = MeeusSunMoon.sunset(date, latitude, longitude);
-            return (date > sunset) ? date.plus({ days: 1 }) : date;
+    _setInputDateToCorrectDay(date: InputDate, latitude: number, longitude: number): InputDate {
+        if (DateTime.isDateTime(date)) {
+            const sunset = this._getEffectiveSunsetOnDate(date, latitude, longitude);
+            return date > sunset ? date.plus({ days: 1 }) : date;
         }
         return date;
+    }
+
+    _getEffectiveSunsetOnDate(date: DateTime, latitude: number, longitude: number): DateTime {
+        const badiDate = new BadiDate(date);
+        const sunsetIsDuringAla =
+            badiDate.month === 19 || (badiDate.month === 20 && badiDate.day === badiDate.ayyamiHaLength);
+        if (this._clockLocation === undefined || (this._clockLocation === 'Finland' && sunsetIsDuringAla)) {
+            return MeeusSunMoon.sunset(date, latitude, longitude) as DateTime;
+        } else if (['Finland', 'USA'].includes(this._clockLocation) && date.isInDST) {
+            return date.set({ hour: 19, minute: 0, second: 0 });
+        }
+        return date.set({ hour: 18, minute: 0, second: 0 });
     }
 
     get badiDate(): BadiDate {
         return this._badiDate;
     }
 
-    get start(): luxon.DateTime {
+    get start(): DateTime {
         return this._start;
     }
 
-    get sunrise(): luxon.DateTime {
+    get sunrise(): DateTime {
         return this._sunrise;
     }
 
-    get solarNoon(): luxon.DateTime {
+    get solarNoon(): DateTime {
         return this._solarNoon;
     }
 
-    get end(): luxon.DateTime {
+    get end(): DateTime {
         return this._end;
     }
 
-    get holyDayCommemoration(): luxon.DateTime | undefined {
+    get holyDayCommemoration(): DateTime | undefined {
         return this._holyDayCommemoration;
     }
 
@@ -147,7 +170,7 @@ class LocalBadiDate {
         return new LocalBadiDate(this.badiDate.previousDay, this._latitude, this._longitude, this._timezoneId);
     }
 
-    toJSON(): { date: YearMonthDay, latitude: number, longitude: number, timezoneId: string } {
+    toJSON(): { date: YearMonthDay; latitude: number; longitude: number; timezoneId: string } {
         return {
             date: this._badiDate.toJSON(),
             latitude: this._latitude,
@@ -156,15 +179,14 @@ class LocalBadiDate {
         };
     }
 
-    static parse(input: string | { date: YearMonthDay, latitude: number, longitude: number, timezoneId: string }) {
+    static parse(input: string | { date: YearMonthDay; latitude: number; longitude: number; timezoneId: string }) {
         const { date, latitude, longitude, timezoneId } = typeof input === 'string' ? JSON.parse(input) : input;
         return new LocalBadiDate(date, latitude, longitude, timezoneId);
     }
 }
 
 const badiDateSettings = (settings: BadiDateSettings) => {
-    if (typeof settings.defaultLanguage === 'string' ||
-        typeof settings.underlineFormat === 'string') {
+    if (typeof settings.defaultLanguage === 'string' || typeof settings.underlineFormat === 'string') {
         badiDateBaseSettings(settings);
     }
     if (typeof settings.useClockLocations === 'boolean') {

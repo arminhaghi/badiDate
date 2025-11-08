@@ -1,5 +1,5 @@
-import { BadiDateSettings } from './types';
 import { setDefaultLanguage, setUnderlineFormat } from './badiLocale';
+import { BadiDateSettings } from './types';
 
 const badiDateSettings = (settings: BadiDateSettings) => {
     if (settings.defaultLanguage) {

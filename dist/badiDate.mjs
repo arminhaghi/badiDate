@@ -1,10 +1,10 @@
 /**
- * @license BadiDate v3.0.2
+ * @license BadiDate v3.1.0
  * (c) 2018 Jan Greis
  * licensed under MIT
  */
 
-import * as luxon from 'luxon';
+import { DateTime, Duration } from 'luxon';
 
 const month = {
     1: 'Bahá',
@@ -130,31 +130,30 @@ const defaultFormat = 'd MM+ y BE';
 
 var en = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    month: month,
-    monthL: monthL,
-    holyDay: holyDay,
-    weekday: weekday,
-    weekdayAbbr3: weekdayAbbr3,
-    weekdayAbbr2: weekdayAbbr2,
-    weekdayL: weekdayL,
-    yearInVahid: yearInVahid,
-    vahid: vahid,
-    kulliShay: kulliShay,
     BE: BE,
     badiCalendar: badiCalendar,
+    defaultFormat: defaultFormat,
+    holyDay: holyDay,
+    kulliShay: kulliShay,
+    month: month,
+    monthL: monthL,
     unicodeCharForZero: unicodeCharForZero,
-    defaultFormat: defaultFormat
+    vahid: vahid,
+    weekday: weekday,
+    weekdayAbbr2: weekdayAbbr2,
+    weekdayAbbr3: weekdayAbbr3,
+    weekdayL: weekdayL,
+    yearInVahid: yearInVahid
 });
 
-/* eslint-disable dot-notation, line-comment-position, camelcase, sort-imports */
 const badiLocale = { en, default: en };
 const setDefaultLanguage = (language) => {
     if (badiLocale[language] === undefined) {
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: error message
         console.log('Chosen language does not exist. Setting has not been changed.');
     }
     else {
-        badiLocale['default'] = badiLocale[language];
+        badiLocale.default = badiLocale[language];
     }
 };
 let underlineFormat = 'css';
@@ -163,18 +162,46 @@ const setUnderlineFormat = (format) => {
         underlineFormat = format;
     }
     else {
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: error message
         console.log('Invalid underline format. Choose one of ["css", "u", "diacritic", "none"]. ' +
             'Setting has not been changed.');
     }
 };
 
+// biome-ignore format: compactness
+const badiYears = [
+    'l4da', 'k4ci', 'k5c7', 'l4d6', 'l4ce', 'k4c4', 'k5d4', 'l4cb', 'l4c1', 'k4cj', 'k5c8', 'l4d7', 'l4cf', 'k4c5',
+    'k4d5', 'k5ce', 'l4c2', 'k4d2', 'k4ca', 'k5da', 'l4ch', 'k4c6', 'k4d6', 'k5cf', 'l4c4', 'k4d4', 'k4cc', 'k5c1',
+    'l4cj', 'k4c8', 'k4d8', 'k5cg', 'l4c5', 'k4d5', 'k4ce', 'k5c3', 'l4d2', 'k4ca', 'k4d9', 'k5ci', 'l4c6', 'k4d6',
+    'k4cf', 'k4c4', 'k5d4', 'k4cb', 'k4bj', 'k4cj', 'k5c9', 'k4d8', 'k4cg', 'k4c6', 'k5d6', 'k4cd', 'k4c2', 'k4d2',
+    'k5ca', 'k4d9', 'k4ci', 'k4c7', 'k5d7', 'k4cf', 'k4c4', 'k4d4', 'k5cc', 'k4bj', 'k4cj', 'k4c9', 'k5d9', 'k4cg',
+    'k4c6', 'k4d5', 'k5cd', 'k4c2', 'k4d1', 'k4ca', 'k4da', 'j5cj', 'k4c7', 'k4d7', 'k4cf', 'j5c4', 'k4d3', 'k4cb',
+    'k4c1', 'k5d1', 'l4c9', 'l4d9', 'l4ch', 'k5c6', 'l4d5', 'l4cd', 'l4c2', 'k5d2', 'l4ca', 'l4da', 'l4cj', 'k5c8',
+    'l4d7', 'l4cf', 'l4c4', 'k5d4', 'l4cb', 'l4c1', 'l4d1', 'k5c9', 'l4d8', 'l4cg', 'l4c5', 'k4d5', 'k5ce', 'l4c2',
+    'l4d2', 'k4cb', 'k5db', 'l4ci', 'l4c7', 'k4d7', 'k5cf', 'l4c4', 'l4d4', 'k4cc', 'k5c2', 'l4d1', 'l4c9', 'k4d9',
+    'k5ch', 'l4c5', 'l4d5', 'k4ce', 'k5c3', 'l4d2', 'l4cb', 'k4da', 'k5ci', 'l4c6', 'l4d6', 'k4cf', 'k5c5', 'l4d4',
+    'l4cc', 'k4c1', 'k4d1', 'k5c9', 'l4d8', 'k4cg', 'k4c6', 'k5d6', 'l4ce', 'k4c3', 'k4d3', 'k5cb', 'l4da', 'k4ci',
+    'k4c7', 'k5d7', 'l4cf', 'k4c5', 'k4d5', 'k5cd', 'l4c1', 'k4cj', 'k4c9', 'k5d9', 'l4cg', 'k4c6', 'k4d6', 'k5ce',
+    'l4c3', 'k4d2', 'k4ca', 'k5bj', 'l4ci', 'k4c7', 'k4d7', 'k4cg', 'k5c5', 'k4d4', 'k4cc', 'k4c1', 'k5d1', 'k4c9',
+    'k4d9', 'k4ch', 'k5c7', 'l4d6', 'l4ce', 'l4c3', 'l5d3', 'l4ca', 'l4da', 'l4cj', 'l5c8', 'l4d7', 'l4cg', 'l4c5',
+    'l5d4', 'l4cb', 'l4c1', 'l4d1', 'l5ca', 'l4d9', 'l4ch', 'l4c6', 'l5d6', 'l4cd', 'l4c2', 'l4d2', 'l4cb', 'k5c1',
+    'l4cj', 'l4c8', 'l4d8', 'k5cg', 'l4c4', 'l4d4', 'l4cc', 'k5c2', 'l4d1', 'l4ca', 'l4da', 'k5ci', 'l4c6', 'l4d5',
+    'l4ce', 'k5c3', 'l4d2', 'l4cb', 'l4db', 'k5cj', 'l4c8', 'l4d7', 'l4cf', 'k5c5', 'l4d4', 'l4cc', 'l4c2', 'k5d2',
+    'l4c9', 'l4d9', 'l4ch', 'k4c6', 'k5d6', 'l4ce', 'l4c3', 'k4d3', 'k5cc', 'l4db', 'l4cj', 'k4c8', 'k5d8', 'l4cf',
+    'l4c4', 'k4d5', 'k5cd', 'l4c2', 'l4d2', 'k4ca', 'k5d9', 'l4cg', 'l4c6', 'k4d6', 'k5cf', 'l4c3', 'l4d3', 'k4cb',
+    'k5bj', 'l4ci', 'l4c7', 'k4d7', 'k5cg', 'l4c5', 'l4d5', 'k4cd', 'k4c2', 'k5d2', 'l4c9', 'k4d9', 'k4ch', 'k5c7',
+    'l4d6', 'k4cf', 'k4c4', 'k5d4', 'l4cb', 'l4bj', 'l4cj', 'l5c8', 'm4d7', 'l4cg', 'l4c5', 'l5d5', 'm4cc', 'l4c1',
+    'l4d1', 'l5ca', 'm4d9', 'l4ch', 'l4c7', 'l5d7', 'm4ce', 'l4c3', 'l4d3', 'l5cb', 'm4bi', 'l4ci', 'l4c8', 'l4d8',
+    'l5ch', 'l4c5', 'l4d5', 'l4cd', 'l5c2', 'l4d1', 'l4c9', 'l4da', 'l5ci', 'l4c7', 'l4d7', 'l4cf', 'l5c4', 'l4d2',
+    'l4cb', 'l4bj', 'l5d1', 'l4c8', 'l4d8', 'l4cg', 'l5c5', 'l4d4', 'l4cc', 'l4c2', 'l5d2', 'l4c9', 'l4da', 'l4ci',
+    'l5c7',
+];
+
 const formatTokens = [
     ['DDL', 'DD+', 'MML', 'MM+', 'WWL', 'yyv', 'KiS'],
     ['dd', 'DD', 'mm', 'MM', 'ww', 'WW', 'yv', 'YV', 'vv', 'kk', 'yy', 'BE', 'BC', 'Va'],
-    ['d', 'D', 'm', 'M', 'W', 'v', 'k', 'y']
+    ['d', 'D', 'm', 'M', 'W', 'v', 'k', 'y'],
 ];
-// eslint-disable-next-line complexity
 const formatBadiDate = (badiDate, formatString, language) => {
     if (!badiDate.isValid) {
         return 'Not a valid Badí‘ date';
@@ -225,7 +252,6 @@ const formatBadiDate = (badiDate, formatString, language) => {
     }
     return formattedDate;
 };
-// eslint-disable-next-line complexity
 const getFormatItem = (badiDate, token, language) => {
     switch (token) {
         // Single character tokens
@@ -238,7 +264,7 @@ const getFormatItem = (badiDate, token, language) => {
         case 'M':
             return postProcessLocaleItem(formatItemFallback(language, 'month', badiDate.month), 3);
         case 'W':
-            return formatItemFallback(language, 'weekdayAbbr3', (badiDate.gregorianDate.weekday + 1) % 7 + 1);
+            return formatItemFallback(language, 'weekdayAbbr3', ((badiDate.gregorianDate.weekday + 1) % 7) + 1);
         case 'y':
             return digitRewrite(badiDate.year, language);
         case 'v':
@@ -247,27 +273,27 @@ const getFormatItem = (badiDate, token, language) => {
             return digitRewrite(Math.floor((badiDate.year - 1) / 361) + 1, language);
         // Two character tokens
         case 'dd':
-            return digitRewrite((`0${String(badiDate.day)}`).slice(-2), language);
+            return digitRewrite(`0${String(badiDate.day)}`.slice(-2), language);
         case 'DD':
             return postProcessLocaleItem(formatItemFallback(language, 'month', badiDate.day));
         case 'mm':
-            return digitRewrite((`0${String(badiDate.month)}`).slice(-2), language);
+            return digitRewrite(`0${String(badiDate.month)}`.slice(-2), language);
         case 'MM':
             return postProcessLocaleItem(formatItemFallback(language, 'month', badiDate.month));
         case 'ww':
-            return formatItemFallback(language, 'weekdayAbbr2', (badiDate.gregorianDate.weekday + 1) % 7 + 1);
+            return formatItemFallback(language, 'weekdayAbbr2', ((badiDate.gregorianDate.weekday + 1) % 7) + 1);
         case 'WW':
-            return formatItemFallback(language, 'weekday', (badiDate.gregorianDate.weekday + 1) % 7 + 1);
+            return formatItemFallback(language, 'weekday', ((badiDate.gregorianDate.weekday + 1) % 7) + 1);
         case 'yy':
-            return digitRewrite((`00${String(badiDate.year)}`).slice(-3), language);
+            return digitRewrite(`00${String(badiDate.year)}`.slice(-3), language);
         case 'yv':
-            return digitRewrite((badiDate.year - 1) % 19 + 1, language);
+            return digitRewrite(((badiDate.year - 1) % 19) + 1, language);
         case 'YV':
-            return formatItemFallback(language, 'yearInVahid', (badiDate.year - 1) % 19 + 1);
+            return formatItemFallback(language, 'yearInVahid', ((badiDate.year - 1) % 19) + 1);
         case 'vv':
-            return digitRewrite((`0${String((Math.floor((badiDate.year - 1) / 19) + 2) % 19 - 1)}`).slice(-2), language);
+            return digitRewrite(`0${String(((Math.floor((badiDate.year - 1) / 19) + 2) % 19) - 1)}`.slice(-2), language);
         case 'kk':
-            return digitRewrite((`0${String(Math.floor((badiDate.year - 1) / 361) + 1)}`).slice(-2), language);
+            return digitRewrite(`0${String(Math.floor((badiDate.year - 1) / 361) + 1)}`.slice(-2), language);
         case 'Va':
             return formatItemFallback(language, 'vahid');
         case 'BE':
@@ -302,9 +328,9 @@ const getFormatItem = (badiDate, token, language) => {
             return `${month} (${monthL})`;
         }
         case 'WWL':
-            return formatItemFallback(language, 'weekdayL', (badiDate.gregorianDate.weekday + 1) % 7 + 1);
+            return formatItemFallback(language, 'weekdayL', ((badiDate.gregorianDate.weekday + 1) % 7) + 1);
         case 'yyv':
-            return digitRewrite((`0${String((badiDate.year - 1) % 19 + 1)}`).slice(-2), language);
+            return digitRewrite(`0${String(((badiDate.year - 1) % 19) + 1)}`.slice(-2), language);
         case 'KiS':
             return postProcessLocaleItem(formatItemFallback(language, 'kulliShay'));
         // istanbul ignore next
@@ -341,7 +367,10 @@ const underlineString = (str) => {
         case 'css':
             return `<span style="text-decoration:underline">${str}</span>`;
         case 'diacritic':
-            return str.split('').map(char => `${char}\u0332`).join('');
+            return str
+                .split('')
+                .map((char) => `${char}\u0332`)
+                .join('');
         case 'u':
             return `<u>${str}</u>`;
         case 'none':
@@ -357,7 +386,7 @@ const digitRewrite = (number, language) => {
     if (unicodeOffset === 0) {
         return number;
     }
-    const codePoints = [...number].map(num => num.charCodeAt(0) + unicodeOffset);
+    const codePoints = [...number].map((num) => num.charCodeAt(0) + unicodeOffset);
     return String.fromCharCode(...codePoints);
 };
 const formatItemFallback = (language, category, index) => {
@@ -376,41 +405,12 @@ const formatItemFallback = (language, category, index) => {
 const languageFallback = (languageCode) => {
     if (languageCode.includes('-')) {
         return languageCode.split('-')[0];
-        // eslint-disable-next-line no-negated-condition
     }
     else if (languageCode !== 'default') {
         return 'default';
     }
     return 'en';
 };
-
-const badiYears = [
-    'l4da', 'k4ci', 'k5c7', 'l4d6', 'l4ce', 'k4c4', 'k5d4', 'l4cb', 'l4c1', 'k4cj', 'k5c8', 'l4d7', 'l4cf', 'k4c5',
-    'k4d5', 'k5ce', 'l4c2', 'k4d2', 'k4ca', 'k5da', 'l4ch', 'k4c6', 'k4d6', 'k5cf', 'l4c4', 'k4d4', 'k4cc', 'k5c1',
-    'l4cj', 'k4c8', 'k4d8', 'k5cg', 'l4c5', 'k4d5', 'k4ce', 'k5c3', 'l4d2', 'k4ca', 'k4d9', 'k5ci', 'l4c6', 'k4d6',
-    'k4cf', 'k4c4', 'k5d4', 'k4cb', 'k4bj', 'k4cj', 'k5c9', 'k4d8', 'k4cg', 'k4c6', 'k5d6', 'k4cd', 'k4c2', 'k4d2',
-    'k5ca', 'k4d9', 'k4ci', 'k4c7', 'k5d7', 'k4cf', 'k4c4', 'k4d4', 'k5cc', 'k4bj', 'k4cj', 'k4c9', 'k5d9', 'k4cg',
-    'k4c6', 'k4d5', 'k5cd', 'k4c2', 'k4d1', 'k4ca', 'k4da', 'j5cj', 'k4c7', 'k4d7', 'k4cf', 'j5c4', 'k4d3', 'k4cb',
-    'k4c1', 'k5d1', 'l4c9', 'l4d9', 'l4ch', 'k5c6', 'l4d5', 'l4cd', 'l4c2', 'k5d2', 'l4ca', 'l4da', 'l4cj', 'k5c8',
-    'l4d7', 'l4cf', 'l4c4', 'k5d4', 'l4cb', 'l4c1', 'l4d1', 'k5c9', 'l4d8', 'l4cg', 'l4c5', 'k4d5', 'k5ce', 'l4c2',
-    'l4d2', 'k4cb', 'k5db', 'l4ci', 'l4c7', 'k4d7', 'k5cf', 'l4c4', 'l4d4', 'k4cc', 'k5c2', 'l4d1', 'l4c9', 'k4d9',
-    'k5ch', 'l4c5', 'l4d5', 'k4ce', 'k5c3', 'l4d2', 'l4cb', 'k4da', 'k5ci', 'l4c6', 'l4d6', 'k4cf', 'k5c5', 'l4d4',
-    'l4cc', 'k4c1', 'k4d1', 'k5c9', 'l4d8', 'k4cg', 'k4c6', 'k5d6', 'l4ce', 'k4c3', 'k4d3', 'k5cb', 'l4da', 'k4ci',
-    'k4c7', 'k5d7', 'l4cf', 'k4c5', 'k4d5', 'k5cd', 'l4c1', 'k4cj', 'k4c9', 'k5d9', 'l4cg', 'k4c6', 'k4d6', 'k5ce',
-    'l4c3', 'k4d2', 'k4ca', 'k5bj', 'l4ci', 'k4c7', 'k4d7', 'k4cg', 'k5c5', 'k4d4', 'k4cc', 'k4c1', 'k5d1', 'k4c9',
-    'k4d9', 'k4ch', 'k5c7', 'l4d6', 'l4ce', 'l4c3', 'l5d3', 'l4ca', 'l4da', 'l4cj', 'l5c8', 'l4d7', 'l4cg', 'l4c5',
-    'l5d4', 'l4cb', 'l4c1', 'l4d1', 'l5ca', 'l4d9', 'l4ch', 'l4c6', 'l5d6', 'l4cd', 'l4c2', 'l4d2', 'l4cb', 'k5c1',
-    'l4cj', 'l4c8', 'l4d8', 'k5cg', 'l4c4', 'l4d4', 'l4cc', 'k5c2', 'l4d1', 'l4ca', 'l4da', 'k5ci', 'l4c6', 'l4d5',
-    'l4ce', 'k5c3', 'l4d2', 'l4cb', 'l4db', 'k5cj', 'l4c8', 'l4d7', 'l4cf', 'k5c5', 'l4d4', 'l4cc', 'l4c2', 'k5d2',
-    'l4c9', 'l4d9', 'l4ch', 'k4c6', 'k5d6', 'l4ce', 'l4c3', 'k4d3', 'k5cc', 'l4db', 'l4cj', 'k4c8', 'k5d8', 'l4cf',
-    'l4c4', 'k4d5', 'k5cd', 'l4c2', 'l4d2', 'k4ca', 'k5d9', 'l4cg', 'l4c6', 'k4d6', 'k5cf', 'l4c3', 'l4d3', 'k4cb',
-    'k5bj', 'l4ci', 'l4c7', 'k4d7', 'k5cg', 'l4c5', 'l4d5', 'k4cd', 'k4c2', 'k5d2', 'l4c9', 'k4d9', 'k4ch', 'k5c7',
-    'l4d6', 'k4cf', 'k4c4', 'k5d4', 'l4cb', 'l4bj', 'l4cj', 'l5c8', 'm4d7', 'l4cg', 'l4c5', 'l5d5', 'm4cc', 'l4c1',
-    'l4d1', 'l5ca', 'm4d9', 'l4ch', 'l4c7', 'l5d7', 'm4ce', 'l4c3', 'l4d3', 'l5cb', 'm4bi', 'l4ci', 'l4c8', 'l4d8',
-    'l5ch', 'l4c5', 'l4d5', 'l4cd', 'l5c2', 'l4d1', 'l4c9', 'l4da', 'l5ci', 'l4c7', 'l4d7', 'l4cf', 'l5c4', 'l4d2',
-    'l4cb', 'l4bj', 'l5d1', 'l4c8', 'l4d8', 'l4cg', 'l5c5', 'l4d4', 'l4cc', 'l4c2', 'l5d2', 'l4c9', 'l4da', 'l4ci',
-    'l5c7',
-];
 
 class BadiDate {
     constructor(date) {
@@ -419,10 +419,10 @@ class BadiDate {
         this._invalidReason = undefined;
         try {
             if (this._isDateObject(date)) {
-                this._gregorianDate = luxon.DateTime.fromObject({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate(), zone: 'UTC' });
+                this._gregorianDate = DateTime.fromObject({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() }, { zone: 'UTC' });
             }
-            else if (luxon.DateTime.isDateTime(date)) {
-                this._gregorianDate = luxon.DateTime.fromObject({ year: date.year, month: date.month, day: date.day, zone: 'UTC' });
+            else if (DateTime.isDateTime(date)) {
+                this._gregorianDate = DateTime.fromObject({ year: date.year, month: date.month, day: date.day }, { zone: 'UTC' });
             }
             else if (this._isYearMonthDay(date) || this._isYearHolyDayNumber(date)) {
                 this._setFromBadiDate(date);
@@ -448,16 +448,17 @@ class BadiDate {
         return Object.prototype.toString.call(arg) === '[object Date]';
     }
     _isYearMonthDay(arg) {
-        return typeof arg.year === 'number' && typeof arg.month === 'number' &&
-            typeof arg.day === 'number';
+        return typeof arg.year === 'number' && typeof arg.month === 'number' && typeof arg.day === 'number';
     }
     _isYearHolyDayNumber(arg) {
-        return typeof arg.year === 'number' && arg.month === undefined &&
-            arg.day === undefined && typeof arg.holyDayNumber === 'number';
+        return (typeof arg.year === 'number' &&
+            arg.month === undefined &&
+            arg.day === undefined &&
+            typeof arg.holyDayNumber === 'number');
     }
     _notInValidGregorianDateRange(datetime) {
-        const lowerBound = luxon.DateTime.fromObject({ year: 1844, month: 3, day: 21, zone: 'UTC' });
-        const upperBound = luxon.DateTime.fromObject({ year: 2351, month: 3, day: 20, zone: 'UTC' });
+        const lowerBound = DateTime.fromObject({ year: 1844, month: 3, day: 21 }, { zone: 'UTC' });
+        const upperBound = DateTime.fromObject({ year: 2351, month: 3, day: 20 }, { zone: 'UTC' });
         return datetime < lowerBound || datetime > upperBound;
     }
     _setFromGregorianDate() {
@@ -465,15 +466,15 @@ class BadiDate {
             throw new RangeError('Input date outside of valid range (1844-03-21 - 2351-03-20)');
         }
         const gregorianYear = this._gregorianDate.year;
-        const oldImplementationCutoff = luxon.DateTime.fromObject({ year: 2015, month: 3, day: 21, zone: 'UTC' });
+        const oldImplementationCutoff = DateTime.fromObject({ year: 2015, month: 3, day: 21 }, { zone: 'UTC' });
         if (this._gregorianDate < oldImplementationCutoff) {
             const { month, day } = this._gregorianDate;
             if (month < 3 || (month === 3 && day < 21)) {
-                this._nawRuz = luxon.DateTime.fromObject({ year: gregorianYear - 1, month: 3, day: 21, zone: 'UTC' });
+                this._nawRuz = DateTime.fromObject({ year: gregorianYear - 1, month: 3, day: 21 }, { zone: 'UTC' });
                 this._year = gregorianYear - 1844;
             }
             else {
-                this._nawRuz = luxon.DateTime.fromObject({ year: gregorianYear, month: 3, day: 21, zone: 'UTC' });
+                this._nawRuz = DateTime.fromObject({ year: gregorianYear, month: 3, day: 21 }, { zone: 'UTC' });
                 this._year = gregorianYear - 1843;
             }
             this._setOldAyyamiHaLength();
@@ -492,7 +493,7 @@ class BadiDate {
         const dayOfBadiYear = this._dayOfYear(this._gregorianDate);
         if (dayOfBadiYear < 343) {
             this._month = Math.floor((dayOfBadiYear - 1) / 19 + 1);
-            this._day = (dayOfBadiYear - 1) % 19 + 1;
+            this._day = ((dayOfBadiYear - 1) % 19) + 1;
         }
         else if (dayOfBadiYear < 343 + this._ayyamiHaLength) {
             this._month = 20;
@@ -509,7 +510,7 @@ class BadiDate {
             throw new RangeError('Input date outside of valid range (1 - 507 B.E.)');
         }
         else if (this._year < 172) {
-            this._nawRuz = luxon.DateTime.fromObject({ year: 1843 + this._year, month: 3, day: 21, zone: 'UTC' });
+            this._nawRuz = DateTime.fromObject({ year: 1843 + this._year, month: 3, day: 21 }, { zone: 'UTC' });
             this._setOldAyyamiHaLength();
             this._yearTwinBirthdays = [12, 5, 13, 9];
         }
@@ -541,10 +542,10 @@ class BadiDate {
             this._holyDay = date.holyDayNumber;
             [this._month, this._day] = this._holyDayMapping()[this._holyDay];
         }
-        this._gregorianDate = this._nawRuz.plus(luxon.Duration.fromObject({ days: this._dayOfYear([this._year, this._month, this._day]) - 1 }));
+        this._gregorianDate = this._nawRuz.plus(Duration.fromObject({ days: this._dayOfYear([this._year, this._month, this._day]) - 1 }));
     }
     _setOldAyyamiHaLength() {
-        if (luxon.DateTime.fromObject({ year: this._nawRuz.year + 1 }).isInLeapYear) {
+        if (DateTime.fromObject({ year: this._nawRuz.year + 1 }).isInLeapYear) {
             this._ayyamiHaLength = 5;
         }
         else {
@@ -562,12 +563,14 @@ class BadiDate {
         this._yearTwinBirthdays = yearData.twinBirthdays;
     }
     _extractBadiYearInfo() {
-        let nawRuz, ayyamiHaLength, twinBirthdays;
+        let nawRuz;
+        let ayyamiHaLength;
+        let twinBirthdays;
         // Check whether data needs to be unpacked or exists in the verbose version
         // istanbul ignore else
         if (badiYears[0] === 'l4da') {
             const components = badiYears[this._year - 172].split('');
-            nawRuz = luxon.DateTime.fromObject({ year: this._year - 172 + 2015, month: 3, day: parseInt(components[0], 36), zone: 'UTC' });
+            nawRuz = DateTime.fromObject({ year: this._year - 172 + 2015, month: 3, day: parseInt(components[0], 36) }, { zone: 'UTC' });
             ayyamiHaLength = parseInt(components[1], 36);
             const TB1 = [parseInt(components[2], 36), parseInt(components[3], 36)];
             const TB2 = TB1[1] < 19 ? [TB1[0], TB1[1] + 1] : [TB1[0] + 1, 1];
@@ -575,7 +578,7 @@ class BadiDate {
         }
         else {
             ({ nawRuz, ayyamiHaLength, twinBirthdays } = badiYears[this._year]);
-            nawRuz = luxon.DateTime.fromISO(nawRuz, { zone: 'UTC' });
+            nawRuz = DateTime.fromISO(nawRuz, { zone: 'UTC' });
         }
         return { nawRuz, ayyamiHaLength, twinBirthdays };
     }
@@ -595,33 +598,32 @@ class BadiDate {
         return date.diff(this._nawRuz).as('days') + 1;
     }
     _setInvalid(invalidReason) {
-        this._gregorianDate = luxon.DateTime.invalid('Not a valid Badí‘ date');
+        this._gregorianDate = DateTime.invalid('Not a valid Badí‘ date');
         this._year = NaN;
         this._month = NaN;
         this._day = NaN;
         this._ayyamiHaLength = NaN;
-        this._nawRuz = luxon.DateTime.invalid('Not a valid Badí‘ date');
+        this._nawRuz = DateTime.invalid('Not a valid Badí‘ date');
         this._valid = false;
         this._invalidReason = invalidReason;
     }
     _setHolyDay() {
         const mapping = this._holyDayMapping();
-        this._holyDay = parseInt(Object.keys(mapping)
-            .find(key => mapping[key][0] === this._month && mapping[key][1] === this._day), 10);
+        this._holyDay = parseInt(Object.keys(mapping).find((key) => mapping[key][0] === this._month && mapping[key][1] === this._day), 10);
     }
     _holyDayMapping() {
         return {
-            [1 /* NawRuz */]: [1, 1],
-            [2 /* FirstRidvan */]: [2, 13],
-            [3 /* NinthRidvan */]: [3, 2],
-            [4 /* TwelfthRidvan */]: [3, 5],
-            [5 /* DeclarationOfTheBab */]: [4, this._year < 172 ? 7 : 8],
-            [6 /* AscensionOfBahaullah */]: [4, 13],
-            [7 /* MartyrdomOfTheBab */]: [6, this._year < 172 ? 16 : 17],
-            [8 /* BirthOfTheBab */]: [this._yearTwinBirthdays[0], this._yearTwinBirthdays[1]],
-            [9 /* BirthOfBahaullah */]: [this._yearTwinBirthdays[2], this._yearTwinBirthdays[3]],
-            [10 /* DayOfTheCovenant */]: [14, 4],
-            [11 /* AscensionOfAbdulBaha */]: [14, 6],
+            [1 /* HolyDay.NawRuz */]: [1, 1],
+            [2 /* HolyDay.FirstRidvan */]: [2, 13],
+            [3 /* HolyDay.NinthRidvan */]: [3, 2],
+            [4 /* HolyDay.TwelfthRidvan */]: [3, 5],
+            [5 /* HolyDay.DeclarationOfTheBab */]: [4, this._year < 172 ? 7 : 8],
+            [6 /* HolyDay.AscensionOfBahaullah */]: [4, 13],
+            [7 /* HolyDay.MartyrdomOfTheBab */]: [6, this._year < 172 ? 16 : 17],
+            [8 /* HolyDay.BirthOfTheBab */]: [this._yearTwinBirthdays[0], this._yearTwinBirthdays[1]],
+            [9 /* HolyDay.BirthOfBahaullah */]: [this._yearTwinBirthdays[2], this._yearTwinBirthdays[3]],
+            [10 /* HolyDay.DayOfTheCovenant */]: [14, 4],
+            [11 /* HolyDay.AscensionOfAbdulBaha */]: [14, 6],
         };
     }
     _leapYearsBefore() {
@@ -629,12 +631,10 @@ class BadiDate {
         if (this.year > 172) {
             // istanbul ignore else
             if (badiYears[0] === 'l4da') {
-                leapYearsBefore += badiYears.slice(0, this.year - 172).filter(entry => entry[1] === '5').length;
+                leapYearsBefore += badiYears.slice(0, this.year - 172).filter((entry) => entry[1] === '5').length;
             }
             else {
-                leapYearsBefore += Object.entries(badiYears)
-                    .filter(([year, data]) => parseInt(year, 10) < this.year &&
-                    data.ayyamiHaLength === 5).length;
+                leapYearsBefore += Object.entries(badiYears).filter(([year, data]) => parseInt(year, 10) < this.year && data.ayyamiHaLength === 5).length;
             }
         }
         return leapYearsBefore;
@@ -674,10 +674,10 @@ class BadiDate {
     }
     // number of the Badí' weekday between 1 (Jalál ~> Saturday) and 7 (Istiqlál ~> Friday).
     get weekday() {
-        return (this._gregorianDate.weekday + 1) % 7 + 1;
+        return ((this._gregorianDate.weekday + 1) % 7) + 1;
     }
     get yearInVahid() {
-        return (this._year - 1) % 19 + 1;
+        return ((this._year - 1) % 19) + 1;
     }
     get vahid() {
         return (Math.floor((this._year - 1) / 19) % 19) + 1;

@@ -125,5 +125,17 @@ const kulliShay = 'кулл-и шай’';
 const BE = 'Э.Б.';
 const badiCalendar = 'Календарь Бадӣ‘';
 
-export { month, monthL, holyDay, weekday, weekdayAbbr3, weekdayAbbr2, weekdayL, yearInVahid, vahid, kulliShay, BE,
-    badiCalendar };
+export {
+    month,
+    monthL,
+    holyDay,
+    weekday,
+    weekdayAbbr3,
+    weekdayAbbr2,
+    weekdayL,
+    yearInVahid,
+    vahid,
+    kulliShay,
+    BE,
+    badiCalendar,
+};

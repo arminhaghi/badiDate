@@ -1,15 +1,13 @@
-import { BadiDate, badiDateSettings, LocalBadiDate } from '../src/localBadiDate';
+import { DateTime } from 'luxon';
 import { BadiDate as BadiDateOrig } from '../src/badiDate';
 import { clockLocationFromPolygons } from '../src/clockLocations';
-import * as luxon from 'luxon';
-import { clockMap, randomLocalBadiDate } from './testData';
+import { BadiDate, badiDateSettings, LocalBadiDate } from '../src/localBadiDate';
 import { BadiDateSettings } from '../src/types';
+import { clockMap, randomLocalBadiDate } from './testData';
 
-const timesString = localBadiDate => (
-    `${localBadiDate.start.toFormat('HH:mm:ss')}|${
-        localBadiDate.sunrise.toFormat('HH:mm:ss')}|${
-        localBadiDate.solarNoon.toFormat('HH:mm:ss')}|${
-        localBadiDate.end.toFormat('HH:mm:ss')}`);
+const timesString = (localBadiDate: LocalBadiDate) =>
+    `${localBadiDate.start.toFormat('HH:mm:ss')}|${localBadiDate.sunrise.toFormat('HH:mm:ss')}|` +
+    `${localBadiDate.solarNoon.toFormat('HH:mm:ss')}|${localBadiDate.end.toFormat('HH:mm:ss')}`;
 
 const bahjiLat = 32.943;
 const bahjiLng = 35.092;
@@ -120,10 +118,18 @@ describe('Getters', () => {
 });
 
 it('should use the following day as input for the BadiDate if the input datetime is after sunset', () => {
-    const badiDate1 = new LocalBadiDate(luxon.DateTime.fromISO('2015-03-21T12:00:00', { zone: 'Asia/Jerusalem' }),
-        bahjiLat, bahjiLng, 'Asia/Jerusalem');
-    const badiDate2 = new LocalBadiDate(luxon.DateTime.fromISO('2015-03-21T20:00:00', { zone: 'Asia/Jerusalem' }),
-        bahjiLat, bahjiLng, 'Asia/Jerusalem');
+    const badiDate1 = new LocalBadiDate(
+        DateTime.fromISO('2015-03-21T12:00:00', { zone: 'Asia/Jerusalem' }),
+        bahjiLat,
+        bahjiLng,
+        'Asia/Jerusalem',
+    );
+    const badiDate2 = new LocalBadiDate(
+        DateTime.fromISO('2015-03-21T20:00:00', { zone: 'Asia/Jerusalem' }),
+        bahjiLat,
+        bahjiLng,
+        'Asia/Jerusalem',
+    );
 
     expect(badiDate1.badiDate.gregorianDate.day).toEqual(21);
     expect(badiDate2.badiDate.gregorianDate.day).toEqual(22);
@@ -134,13 +140,16 @@ describe('the BadiDate settings', () => {
         {
             settings: { defaultLanguage: 'en', underlineFormat: 'css' },
             expectedOutput: 'Ma<span style="text-decoration:underline">sh</span>íyyat (Will)',
-        }, {
+        },
+        {
             settings: { defaultLanguage: 'es', underlineFormat: 'css' },
             expectedOutput: 'Ma<span style="text-decoration:underline">sh</span>íyyat (Voluntad)',
-        }, {
+        },
+        {
             settings: { defaultLanguage: 'en', underlineFormat: 'diacritic' },
             expectedOutput: 'Mas̲h̲íyyat (Will)',
-        }, {
+        },
+        {
             settings: { defaultLanguage: 'es', underlineFormat: 'diacritic' },
             expectedOutput: 'Mas̲h̲íyyat (Voluntad)',
         },
@@ -170,7 +179,8 @@ describe('the useClockLocationSettings', () => {
             fixedTimes: '19:00:00|07:00:00|13:00:00|19:00:00',
             solarTimes: '20:16:00|07:57:00|14:07:00|20:19:00',
             clockLocation: 'USA',
-        }, {
+        },
+        {
             date: { year: 172, month: 1, day: 1 },
             latitude: 62.0,
             longitude: -120.0,
@@ -178,7 +188,8 @@ describe('the useClockLocationSettings', () => {
             fixedTimes: '18:00:00|06:30:00|12:00:00|18:00:00',
             solarTimes: '20:15:00|07:58:00|14:07:00|20:18:00',
             clockLocation: 'Canada',
-        }, {
+        },
+        {
             date: { year: 172, month: 1, day: 1 },
             latitude: 65.0,
             longitude: -19.0,
@@ -186,7 +197,8 @@ describe('the useClockLocationSettings', () => {
             fixedTimes: '18:00:00|06:00:00|13:00:00|18:00:00',
             solarTimes: '19:31:00|07:14:00|13:23:00|19:34:00',
             clockLocation: 'Iceland',
-        }, {
+        },
+        {
             date: { year: 172, month: 1, day: 1 },
             latitude: 60.0,
             longitude: 10.0,
@@ -194,7 +206,8 @@ describe('the useClockLocationSettings', () => {
             fixedTimes: '18:00:00|06:00:00|12:00:00|18:00:00',
             solarTimes: '18:34:00|06:20:00|12:27:00|18:36:00',
             clockLocation: 'Norway',
-        }, {
+        },
+        {
             date: { year: 172, month: 1, day: 1 },
             latitude: 65.0,
             longitude: 17.0,
@@ -202,15 +215,35 @@ describe('the useClockLocationSettings', () => {
             fixedTimes: '18:00:00|06:00:00|12:00:00|18:00:00',
             solarTimes: '18:07:00|05:51:00|11:59:00|18:10:00',
             clockLocation: 'Sweden',
-        }, {
+        },
+        {
             date: { year: 172, month: 1, day: 1 },
             latitude: 65.0,
             longitude: 28.0,
             timezone: 'Europe/Helsinki',
-            fixedTimes: '18:00:00|06:00:00|12:00:00|18:00:00',
+            fixedTimes: '18:23:00|06:00:00|12:00:00|18:00:00',
             solarTimes: '18:23:00|06:07:00|12:15:00|18:26:00',
             clockLocation: 'Finland',
-        }, {
+        },
+        {
+            date: { year: 172, month: 20, day: 4 },
+            latitude: 65.0,
+            longitude: 28.0,
+            timezone: 'Europe/Helsinki',
+            fixedTimes: '18:00:00|06:00:00|12:00:00|17:22:00',
+            solarTimes: '17:19:00|07:21:00|12:20:00|17:22:00',
+            clockLocation: 'Finland',
+        },
+        {
+            date: { year: 172, month: 19, day: 1 },
+            latitude: 65.0,
+            longitude: 28.0,
+            timezone: 'Europe/Helsinki',
+            fixedTimes: '17:22:00|07:17:00|12:20:00|17:25:00',
+            solarTimes: '17:22:00|07:17:00|12:20:00|17:25:00',
+            clockLocation: 'Finland',
+        },
+        {
             date: { year: 172, month: 19, day: 19 },
             latitude: 65.0,
             longitude: 28.0,
@@ -218,6 +251,107 @@ describe('the useClockLocationSettings', () => {
             fixedTimes: '18:19:00|06:11:00|12:16:00|18:22:00',
             solarTimes: '18:19:00|06:11:00|12:16:00|18:22:00',
             clockLocation: 'Finland',
+        },
+    ];
+
+    const clockLocationEdgeCases = [
+        {
+            latitude: 65,
+            longitude: -150,
+            timezone: 'America/Anchorage',
+            dates: [
+                { inputDate: '2023-03-11T17:59:00', expectedBadiDate: { year: 179, month: 19, day: 10 } },
+                { inputDate: '2023-03-11T18:01:00', expectedBadiDate: { year: 179, month: 19, day: 11 } },
+                { inputDate: '2023-03-12T18:59:00', expectedBadiDate: { year: 179, month: 19, day: 11 } },
+                { inputDate: '2023-03-12T19:01:00', expectedBadiDate: { year: 179, month: 19, day: 12 } },
+                { inputDate: '2023-11-04T18:59:00', expectedBadiDate: { year: 180, month: 13, day: 1 } },
+                { inputDate: '2023-11-04T19:01:00', expectedBadiDate: { year: 180, month: 13, day: 2 } },
+                { inputDate: '2023-11-05T17:59:00', expectedBadiDate: { year: 180, month: 13, day: 2 } },
+                { inputDate: '2023-11-05T18:01:00', expectedBadiDate: { year: 180, month: 13, day: 3 } },
+            ],
+        },
+        {
+            latitude: 62.0,
+            longitude: -120,
+            timezone: 'America/Edmonton',
+            dates: [
+                { inputDate: '2023-03-01T17:59:00', expectedBadiDate: { year: 179, month: 20, day: 4 } },
+                { inputDate: '2023-03-01T18:01:00', expectedBadiDate: { year: 179, month: 19, day: 1 } },
+                { inputDate: '2023-06-01T17:59:00', expectedBadiDate: { year: 180, month: 4, day: 16 } },
+                { inputDate: '2023-06-01T18:01:00', expectedBadiDate: { year: 180, month: 4, day: 17 } },
+                { inputDate: '2023-09-01T17:59:00', expectedBadiDate: { year: 180, month: 9, day: 13 } },
+                { inputDate: '2023-09-01T18:01:00', expectedBadiDate: { year: 180, month: 9, day: 14 } },
+                { inputDate: '2023-12-01T17:59:00', expectedBadiDate: { year: 180, month: 14, day: 9 } },
+                { inputDate: '2023-12-01T18:01:00', expectedBadiDate: { year: 180, month: 14, day: 10 } },
+            ],
+        },
+        {
+            latitude: 65.0,
+            longitude: -19.0,
+            timezone: 'Atlantic/Reykjavik',
+            dates: [
+                { inputDate: '2023-03-01T17:59:00', expectedBadiDate: { year: 179, month: 20, day: 4 } },
+                { inputDate: '2023-03-01T18:01:00', expectedBadiDate: { year: 179, month: 19, day: 1 } },
+                { inputDate: '2023-06-01T17:59:00', expectedBadiDate: { year: 180, month: 4, day: 16 } },
+                { inputDate: '2023-06-01T18:01:00', expectedBadiDate: { year: 180, month: 4, day: 17 } },
+                { inputDate: '2023-09-01T17:59:00', expectedBadiDate: { year: 180, month: 9, day: 13 } },
+                { inputDate: '2023-09-01T18:01:00', expectedBadiDate: { year: 180, month: 9, day: 14 } },
+                { inputDate: '2023-12-01T17:59:00', expectedBadiDate: { year: 180, month: 14, day: 9 } },
+                { inputDate: '2023-12-01T18:01:00', expectedBadiDate: { year: 180, month: 14, day: 10 } },
+            ],
+        },
+        {
+            latitude: 60.0,
+            longitude: 10.0,
+            timezone: 'Europe/Oslo',
+            dates: [
+                { inputDate: '2023-03-01T17:59:00', expectedBadiDate: { year: 179, month: 20, day: 4 } },
+                { inputDate: '2023-03-01T18:01:00', expectedBadiDate: { year: 179, month: 19, day: 1 } },
+                { inputDate: '2023-06-01T17:59:00', expectedBadiDate: { year: 180, month: 4, day: 16 } },
+                { inputDate: '2023-06-01T18:01:00', expectedBadiDate: { year: 180, month: 4, day: 17 } },
+                { inputDate: '2023-09-01T17:59:00', expectedBadiDate: { year: 180, month: 9, day: 13 } },
+                { inputDate: '2023-09-01T18:01:00', expectedBadiDate: { year: 180, month: 9, day: 14 } },
+                { inputDate: '2023-12-01T17:59:00', expectedBadiDate: { year: 180, month: 14, day: 9 } },
+                { inputDate: '2023-12-01T18:01:00', expectedBadiDate: { year: 180, month: 14, day: 10 } },
+            ],
+        },
+        {
+            latitude: 65.0,
+            longitude: 17.0,
+            timezone: 'Europe/Stockholm',
+            dates: [
+                { inputDate: '2023-03-01T17:59:00', expectedBadiDate: { year: 179, month: 20, day: 4 } },
+                { inputDate: '2023-03-01T18:01:00', expectedBadiDate: { year: 179, month: 19, day: 1 } },
+                { inputDate: '2023-06-01T17:59:00', expectedBadiDate: { year: 180, month: 4, day: 16 } },
+                { inputDate: '2023-06-01T18:01:00', expectedBadiDate: { year: 180, month: 4, day: 17 } },
+                { inputDate: '2023-09-01T17:59:00', expectedBadiDate: { year: 180, month: 9, day: 13 } },
+                { inputDate: '2023-09-01T18:01:00', expectedBadiDate: { year: 180, month: 9, day: 14 } },
+                { inputDate: '2023-12-01T17:59:00', expectedBadiDate: { year: 180, month: 14, day: 9 } },
+                { inputDate: '2023-12-01T18:01:00', expectedBadiDate: { year: 180, month: 14, day: 10 } },
+            ],
+        },
+        {
+            latitude: 60.16749,
+            longitude: 24.94275,
+            timezone: 'Europe/Helsinki',
+            dates: [
+                { inputDate: '2023-02-28T17:59:00', expectedBadiDate: { year: 179, month: 20, day: 3 } },
+                { inputDate: '2023-02-28T18:01:00', expectedBadiDate: { year: 179, month: 20, day: 4 } },
+                { inputDate: '2023-03-01T17:45:00', expectedBadiDate: { year: 179, month: 20, day: 4 } },
+                { inputDate: '2023-03-01T17:47:00', expectedBadiDate: { year: 179, month: 19, day: 1 } },
+                { inputDate: '2023-03-20T18:33:00', expectedBadiDate: { year: 179, month: 19, day: 19 } },
+                { inputDate: '2023-03-20T18:35:00', expectedBadiDate: { year: 180, month: 1, day: 1 } },
+                { inputDate: '2023-03-21T17:59:00', expectedBadiDate: { year: 180, month: 1, day: 1 } },
+                { inputDate: '2023-03-21T18:01:00', expectedBadiDate: { year: 180, month: 1, day: 2 } },
+                { inputDate: '2023-03-25T17:59:00', expectedBadiDate: { year: 180, month: 1, day: 5 } },
+                { inputDate: '2023-03-25T18:01:00', expectedBadiDate: { year: 180, month: 1, day: 6 } },
+                { inputDate: '2023-03-26T18:59:00', expectedBadiDate: { year: 180, month: 1, day: 6 } },
+                { inputDate: '2023-03-26T19:01:00', expectedBadiDate: { year: 180, month: 1, day: 7 } },
+                { inputDate: '2023-10-28T18:59:00', expectedBadiDate: { year: 180, month: 12, day: 13 } },
+                { inputDate: '2023-10-28T19:01:00', expectedBadiDate: { year: 180, month: 12, day: 14 } },
+                { inputDate: '2023-10-29T17:59:00', expectedBadiDate: { year: 180, month: 12, day: 14 } },
+                { inputDate: '2023-10-29T18:01:00', expectedBadiDate: { year: 180, month: 12, day: 15 } },
+            ],
         },
     ];
 
@@ -237,6 +371,23 @@ describe('the useClockLocationSettings', () => {
 
             expect(timesString(badiDate)).toEqual(solarTimes);
             expect(badiDate.clockLocation).toBeUndefined();
+        });
+    });
+
+    clockLocationEdgeCases.forEach(({ latitude, longitude, timezone, dates }) => {
+        dates.forEach(({ inputDate, expectedBadiDate }) => {
+            it(`should be set to correct badiDate in ${latitude} ${longitude} at ${inputDate}`, () => {
+                badiDateSettings({ useClockLocations: true });
+                const inputDateTime = DateTime.fromISO(inputDate, { zone: timezone });
+                const badiDate = new LocalBadiDate(inputDateTime, latitude, longitude, timezone);
+                const dateComponents = {
+                    year: badiDate.badiDate.year,
+                    month: badiDate.badiDate.month,
+                    day: badiDate.badiDate.day,
+                };
+
+                expect(dateComponents).toEqual(expectedBadiDate);
+            });
         });
     });
 

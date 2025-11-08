@@ -1,27 +1,28 @@
-/* eslint-disable max-depth */
-import { terser } from 'rollup-plugin-terser';
 import resolve from '@rollup/plugin-node-resolve';
+import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 import replace from 'rollup-plugin-re';
 
 const copyrightNotice = `/**
- * @license BadiDate v3.0.2
+ * @license BadiDate v3.1.0
  * (c) 2018 Jan Greis
  * licensed under MIT
  */
 `;
 
-const localeRegex = languageCodes => {
-    const locales = ['ar', 'de', 'es', 'fa', 'fr', 'lv', 'nl', 'pt', 'ru', 'sv',
-        'zh', 'en-us'].filter(entry => !languageCodes.includes(entry));
+const localeRegex = (languageCodes) => {
+    const locales = ['ar', 'de', 'es', 'fa', 'fr', 'lv', 'nl', 'pt', 'ru', 'sv', 'zh', 'en-us'].filter(
+        (entry) => !languageCodes.includes(entry),
+    );
     const regexString = `( '?(${locales.join('|')})('?: \\S*)?,)`;
-    return RegExp(regexString, 'g');
+    return new RegExp(regexString, 'g');
 };
 
 const rollupConfig = (root, msm, locales, minify, format, filename) => {
     if (filename === undefined) {
         filename = `dist/${root.slice(0, -3)}${msm ? '-msm' : ''}${locales === true ? '-locales' : ''}${
-            minify ? '.min' : ''}.${format === 'es' ? 'm.' : ''}js`;
+            minify ? '.min' : ''
+        }.${format === 'es' ? 'm.' : ''}js`;
     }
     const config = {
         external: ['luxon'],

@@ -1,5 +1,5 @@
 /**
- * @license BadiDate v3.0.2
+ * @license BadiDate v3.1.0
  * (c) 2018 Jan Greis
  * licensed under MIT
  */
@@ -8,149 +8,9 @@
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('luxon')) :
     typeof define === 'function' && define.amd ? define(['exports', 'luxon'], factory) :
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.window = global.window || {}, global.luxon));
-}(this, (function (exports, luxon) { 'use strict';
+})(this, (function (exports, luxon) { 'use strict';
 
     const month$4 = {
-        1: 'Bahá',
-        2: 'Jalál',
-        3: 'Jamál',
-        4: '‘Aẓamat',
-        5: 'Núr',
-        6: 'Raḥmat',
-        7: 'Kalimát',
-        8: 'Kamál',
-        9: 'Asmá’',
-        10: '‘Izzat',
-        11: 'Ma_sh_íyyat',
-        12: '‘Ilm',
-        13: 'Qudrat',
-        14: 'Qawl',
-        15: 'Masá’il',
-        16: '_Sh_araf',
-        17: 'Sulṭán',
-        18: 'Mulk',
-        19: '‘Alá’',
-        20: 'Ayyám-i-Há',
-    };
-    const monthL$c = {
-        1: 'Splendour',
-        2: 'Glory',
-        3: 'Beauty',
-        4: 'Grandeur',
-        5: 'Light',
-        6: 'Mercy',
-        7: 'Words',
-        8: 'Perfection',
-        9: 'Names',
-        10: 'Might',
-        11: 'Will',
-        12: 'Knowledge',
-        13: 'Power',
-        14: 'Speech',
-        15: 'Questions',
-        16: 'Honour',
-        17: 'Sovereignty',
-        18: 'Dominion',
-        19: 'Loftiness',
-        20: 'Ayyám-i-Há',
-    };
-    const holyDay$b = {
-        1: 'Naw-Rúz',
-        2: 'First day of Riḍván',
-        3: 'Ninth day of Riḍván',
-        4: 'Twelfth day of Riḍván',
-        5: 'Declaration of the Báb',
-        6: 'Ascension of Bahá’u’lláh',
-        7: 'Martyrdom of the Báb',
-        8: 'Birth of the Báb',
-        9: 'Birth of Bahá’u’lláh',
-        10: 'Day of the Covenant',
-        11: 'Ascension of ‘Abdu’l-Bahá',
-    };
-    // CAREFUL: Numbering corresponds to Badí' week, i.e. 1 is Jalál (-> Saturday)
-    const weekday$4 = {
-        1: 'Jalál',
-        2: 'Jamál',
-        3: 'Kamál',
-        4: 'Fiḍál',
-        5: '‘Idál',
-        6: 'Istijlál',
-        7: 'Istiqlál',
-    };
-    const weekdayAbbr3$4 = {
-        1: 'Jal',
-        2: 'Jam',
-        3: 'Kam',
-        4: 'Fiḍ',
-        5: '‘Idá',
-        6: 'Isj',
-        7: 'Isq',
-    };
-    const weekdayAbbr2$4 = {
-        1: 'Jl',
-        2: 'Jm',
-        3: 'Ka',
-        4: 'Fi',
-        5: '‘Id',
-        6: 'Ij',
-        7: 'Iq',
-    };
-    const weekdayL$b = {
-        1: 'Glory',
-        2: 'Beauty',
-        3: 'Perfection',
-        4: 'Grace',
-        5: 'Justice',
-        6: 'Majesty',
-        7: 'Independence',
-    };
-    const yearInVahid$4 = {
-        1: 'Alif',
-        2: 'Bá’',
-        3: 'Ab',
-        4: 'Dál',
-        5: 'Báb',
-        6: 'Váv',
-        7: 'Abad',
-        8: 'Jád',
-        9: 'Bahá',
-        10: 'Ḥubb',
-        11: 'Bahháj',
-        12: 'Javáb',
-        13: 'Aḥad',
-        14: 'Vahháb',
-        15: 'Vidád',
-        16: 'Badí‘',
-        17: 'Bahí',
-        18: 'Abhá',
-        19: 'Váḥid',
-    };
-    const vahid$4 = 'Váḥid';
-    const kulliShay$4 = 'Kull-i-_Sh_ay’';
-    const BE$b = 'B.E.';
-    const badiCalendar$b = 'Badí‘ Calendar';
-    const unicodeCharForZero$2 = '0';
-    const defaultFormat$2 = 'd MM+ y BE';
-
-    var en = /*#__PURE__*/Object.freeze({
-        __proto__: null,
-        month: month$4,
-        monthL: monthL$c,
-        holyDay: holyDay$b,
-        weekday: weekday$4,
-        weekdayAbbr3: weekdayAbbr3$4,
-        weekdayAbbr2: weekdayAbbr2$4,
-        weekdayL: weekdayL$b,
-        yearInVahid: yearInVahid$4,
-        vahid: vahid$4,
-        kulliShay: kulliShay$4,
-        BE: BE$b,
-        badiCalendar: badiCalendar$b,
-        unicodeCharForZero: unicodeCharForZero$2,
-        defaultFormat: defaultFormat$2
-    });
-
-    const month$3 = {
         1: 'البهاء',
         2: 'الجلال',
         3: 'الجمال',
@@ -172,8 +32,8 @@
         19: 'العلاء',
         20: 'ايام الهاء',
     };
-    const monthL$b = month$3;
-    const holyDay$a = {
+    const monthL$c = month$4;
+    const holyDay$b = {
         1: 'عيد النَّيروز',
         2: 'اليوم الأول من عيد الرِّضوان',
         3: 'اليوم التاسع من عيد الرِّضوان',
@@ -186,7 +46,7 @@
         10: 'يوم الميثاق',
         11: 'يوم صعود حضرة عبد البهاء',
     };
-    const weekday$3 = {
+    const weekday$4 = {
         1: 'الجلال',
         2: 'الجمال',
         3: 'الكمال',
@@ -195,7 +55,7 @@
         6: 'الأستجلال',
         7: 'الاستقلال',
     };
-    const weekdayAbbr3$3 = {
+    const weekdayAbbr3$4 = {
         1: 'جلا',
         2: 'جما',
         3: 'كما',
@@ -204,7 +64,7 @@
         6: 'اسج',
         7: 'اسق',
     };
-    const weekdayAbbr2$3 = {
+    const weekdayAbbr2$4 = {
         1: 'جل',
         2: 'جم',
         3: 'كم',
@@ -213,7 +73,7 @@
         6: 'اج',
         7: 'اق',
     };
-    const weekdayL$a = {
+    const weekdayL$b = {
         1: 'الجلال',
         2: 'الجمال',
         3: 'الكمال',
@@ -222,7 +82,7 @@
         6: 'الأستجلال',
         7: 'أستقلال',
     };
-    const yearInVahid$3 = {
+    const yearInVahid$4 = {
         1: 'ألف',
         2: 'باء',
         3: 'أب',
@@ -243,32 +103,32 @@
         18: 'ابهى',
         19: 'واحد',
     };
-    const vahid$3 = 'واحد';
-    const kulliShay$3 = 'كل شيء';
-    const BE$a = 'بديع';
-    const badiCalendar$a = 'تقويم بديع';
-    const unicodeCharForZero$1 = '٠';
-    const defaultFormat$1 = '&#8207;d MM y BE&#8207;';
+    const vahid$4 = 'واحد';
+    const kulliShay$4 = 'كل شيء';
+    const BE$b = 'بديع';
+    const badiCalendar$b = 'تقويم بديع';
+    const unicodeCharForZero$2 = '٠';
+    const defaultFormat$2 = '&#8207;d MM y BE&#8207;';
 
     var ar = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        month: month$3,
-        monthL: monthL$b,
-        holyDay: holyDay$a,
-        weekday: weekday$3,
-        weekdayAbbr3: weekdayAbbr3$3,
-        weekdayAbbr2: weekdayAbbr2$3,
-        weekdayL: weekdayL$a,
-        yearInVahid: yearInVahid$3,
-        vahid: vahid$3,
-        kulliShay: kulliShay$3,
-        BE: BE$a,
-        badiCalendar: badiCalendar$a,
-        unicodeCharForZero: unicodeCharForZero$1,
-        defaultFormat: defaultFormat$1
+        BE: BE$b,
+        badiCalendar: badiCalendar$b,
+        defaultFormat: defaultFormat$2,
+        holyDay: holyDay$b,
+        kulliShay: kulliShay$4,
+        month: month$4,
+        monthL: monthL$c,
+        unicodeCharForZero: unicodeCharForZero$2,
+        vahid: vahid$4,
+        weekday: weekday$4,
+        weekdayAbbr2: weekdayAbbr2$4,
+        weekdayAbbr3: weekdayAbbr3$4,
+        weekdayL: weekdayL$b,
+        yearInVahid: yearInVahid$4
     });
 
-    const monthL$a = {
+    const monthL$b = {
         1: 'Herrlichkeit',
         2: 'Ruhm',
         3: 'Schönheit',
@@ -290,7 +150,7 @@
         19: 'Erhabenheit',
         20: 'Ayyám-i-Há',
     };
-    const holyDay$9 = {
+    const holyDay$a = {
         1: 'Naw-Rúz',
         2: 'Erster Riḍván-Tag',
         3: 'Neunter Riḍván-Tag',
@@ -303,7 +163,7 @@
         10: 'Tag des Bundes',
         11: 'Hinscheiden ‘Abdu’l-Bahás',
     };
-    const weekdayL$9 = {
+    const weekdayL$a = {
         1: 'Ruhm',
         2: 'Schönheit',
         3: 'Vollkommenheit',
@@ -312,19 +172,169 @@
         6: 'Majestät',
         7: 'Unabhängigkeit',
     };
-    const BE$9 = 'B.E.';
-    const badiCalendar$9 = 'Badí‘ Kalender';
+    const BE$a = 'B.E.';
+    const badiCalendar$a = 'Badí‘ Kalender';
 
     var de = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        monthL: monthL$a,
-        holyDay: holyDay$9,
-        weekdayL: weekdayL$9,
+        BE: BE$a,
+        badiCalendar: badiCalendar$a,
+        holyDay: holyDay$a,
+        monthL: monthL$b,
+        weekdayL: weekdayL$a
+    });
+
+    const month$3 = {
+        1: 'Bahá',
+        2: 'Jalál',
+        3: 'Jamál',
+        4: '‘Aẓamat',
+        5: 'Núr',
+        6: 'Raḥmat',
+        7: 'Kalimát',
+        8: 'Kamál',
+        9: 'Asmá’',
+        10: '‘Izzat',
+        11: 'Ma_sh_íyyat',
+        12: '‘Ilm',
+        13: 'Qudrat',
+        14: 'Qawl',
+        15: 'Masá’il',
+        16: '_Sh_araf',
+        17: 'Sulṭán',
+        18: 'Mulk',
+        19: '‘Alá’',
+        20: 'Ayyám-i-Há',
+    };
+    const monthL$a = {
+        1: 'Splendour',
+        2: 'Glory',
+        3: 'Beauty',
+        4: 'Grandeur',
+        5: 'Light',
+        6: 'Mercy',
+        7: 'Words',
+        8: 'Perfection',
+        9: 'Names',
+        10: 'Might',
+        11: 'Will',
+        12: 'Knowledge',
+        13: 'Power',
+        14: 'Speech',
+        15: 'Questions',
+        16: 'Honour',
+        17: 'Sovereignty',
+        18: 'Dominion',
+        19: 'Loftiness',
+        20: 'Ayyám-i-Há',
+    };
+    const holyDay$9 = {
+        1: 'Naw-Rúz',
+        2: 'First day of Riḍván',
+        3: 'Ninth day of Riḍván',
+        4: 'Twelfth day of Riḍván',
+        5: 'Declaration of the Báb',
+        6: 'Ascension of Bahá’u’lláh',
+        7: 'Martyrdom of the Báb',
+        8: 'Birth of the Báb',
+        9: 'Birth of Bahá’u’lláh',
+        10: 'Day of the Covenant',
+        11: 'Ascension of ‘Abdu’l-Bahá',
+    };
+    // CAREFUL: Numbering corresponds to Badí' week, i.e. 1 is Jalál (-> Saturday)
+    const weekday$3 = {
+        1: 'Jalál',
+        2: 'Jamál',
+        3: 'Kamál',
+        4: 'Fiḍál',
+        5: '‘Idál',
+        6: 'Istijlál',
+        7: 'Istiqlál',
+    };
+    const weekdayAbbr3$3 = {
+        1: 'Jal',
+        2: 'Jam',
+        3: 'Kam',
+        4: 'Fiḍ',
+        5: '‘Idá',
+        6: 'Isj',
+        7: 'Isq',
+    };
+    const weekdayAbbr2$3 = {
+        1: 'Jl',
+        2: 'Jm',
+        3: 'Ka',
+        4: 'Fi',
+        5: '‘Id',
+        6: 'Ij',
+        7: 'Iq',
+    };
+    const weekdayL$9 = {
+        1: 'Glory',
+        2: 'Beauty',
+        3: 'Perfection',
+        4: 'Grace',
+        5: 'Justice',
+        6: 'Majesty',
+        7: 'Independence',
+    };
+    const yearInVahid$3 = {
+        1: 'Alif',
+        2: 'Bá’',
+        3: 'Ab',
+        4: 'Dál',
+        5: 'Báb',
+        6: 'Váv',
+        7: 'Abad',
+        8: 'Jád',
+        9: 'Bahá',
+        10: 'Ḥubb',
+        11: 'Bahháj',
+        12: 'Javáb',
+        13: 'Aḥad',
+        14: 'Vahháb',
+        15: 'Vidád',
+        16: 'Badí‘',
+        17: 'Bahí',
+        18: 'Abhá',
+        19: 'Váḥid',
+    };
+    const vahid$3 = 'Váḥid';
+    const kulliShay$3 = 'Kull-i-_Sh_ay’';
+    const BE$9 = 'B.E.';
+    const badiCalendar$9 = 'Badí‘ Calendar';
+    const unicodeCharForZero$1 = '0';
+    const defaultFormat$1 = 'd MM+ y BE';
+
+    var en = /*#__PURE__*/Object.freeze({
+        __proto__: null,
         BE: BE$9,
-        badiCalendar: badiCalendar$9
+        badiCalendar: badiCalendar$9,
+        defaultFormat: defaultFormat$1,
+        holyDay: holyDay$9,
+        kulliShay: kulliShay$3,
+        month: month$3,
+        monthL: monthL$a,
+        unicodeCharForZero: unicodeCharForZero$1,
+        vahid: vahid$3,
+        weekday: weekday$3,
+        weekdayAbbr2: weekdayAbbr2$3,
+        weekdayAbbr3: weekdayAbbr3$3,
+        weekdayL: weekdayL$9,
+        yearInVahid: yearInVahid$3
     });
 
     const monthL$9 = {
+        1: 'Splendor',
+        16: 'Honor',
+    };
+
+    var en_us = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        monthL: monthL$9
+    });
+
+    const monthL$8 = {
         1: 'Esplendor',
         2: 'Gloria',
         3: 'Belleza',
@@ -373,11 +383,11 @@
 
     var es = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        monthL: monthL$9,
-        holyDay: holyDay$8,
-        weekdayL: weekdayL$8,
         BE: BE$8,
-        badiCalendar: badiCalendar$8
+        badiCalendar: badiCalendar$8,
+        holyDay: holyDay$8,
+        monthL: monthL$8,
+        weekdayL: weekdayL$8
     });
 
     const month$2 = {
@@ -402,7 +412,7 @@
         19: 'العلاء',
         20: 'ايام الهاء',
     };
-    const monthL$8 = {
+    const monthL$7 = {
         1: 'بهاء',
         2: 'جلال',
         3: 'جمال',
@@ -503,23 +513,23 @@
 
     var fa = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        month: month$2,
-        monthL: monthL$8,
-        holyDay: holyDay$7,
-        weekday: weekday$2,
-        weekdayAbbr3: weekdayAbbr3$2,
-        weekdayAbbr2: weekdayAbbr2$2,
-        weekdayL: weekdayL$7,
-        yearInVahid: yearInVahid$2,
-        vahid: vahid$2,
-        kulliShay: kulliShay$2,
         BE: BE$7,
         badiCalendar: badiCalendar$7,
+        defaultFormat: defaultFormat,
+        holyDay: holyDay$7,
+        kulliShay: kulliShay$2,
+        month: month$2,
+        monthL: monthL$7,
         unicodeCharForZero: unicodeCharForZero,
-        defaultFormat: defaultFormat
+        vahid: vahid$2,
+        weekday: weekday$2,
+        weekdayAbbr2: weekdayAbbr2$2,
+        weekdayAbbr3: weekdayAbbr3$2,
+        weekdayL: weekdayL$7,
+        yearInVahid: yearInVahid$2
     });
 
-    const monthL$7 = {
+    const monthL$6 = {
         1: 'Splendeur',
         2: 'Gloire',
         3: 'Beauté',
@@ -568,14 +578,14 @@
 
     var fr = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        monthL: monthL$7,
-        holyDay: holyDay$6,
-        weekdayL: weekdayL$6,
         BE: BE$6,
-        badiCalendar: badiCalendar$6
+        badiCalendar: badiCalendar$6,
+        holyDay: holyDay$6,
+        monthL: monthL$6,
+        weekdayL: weekdayL$6
     });
 
-    const monthL$6 = {
+    const monthL$5 = {
         1: 'Spožums',
         2: 'Slava',
         3: 'Skaistums',
@@ -624,14 +634,14 @@
 
     var lv = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        monthL: monthL$6,
-        holyDay: holyDay$5,
-        weekdayL: weekdayL$5,
         BE: BE$5,
-        badiCalendar: badiCalendar$5
+        badiCalendar: badiCalendar$5,
+        holyDay: holyDay$5,
+        monthL: monthL$5,
+        weekdayL: weekdayL$5
     });
 
-    const monthL$5 = {
+    const monthL$4 = {
         1: 'Pracht',
         2: 'Heerlijkheid',
         3: 'Schoonheid',
@@ -680,14 +690,14 @@
 
     var nl = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        monthL: monthL$5,
-        holyDay: holyDay$4,
-        weekdayL: weekdayL$4,
         BE: BE$4,
-        badiCalendar: badiCalendar$4
+        badiCalendar: badiCalendar$4,
+        holyDay: holyDay$4,
+        monthL: monthL$4,
+        weekdayL: weekdayL$4
     });
 
-    const monthL$4 = {
+    const monthL$3 = {
         1: 'Esplendor',
         2: 'Glória',
         3: 'Beleza',
@@ -736,11 +746,11 @@
 
     var pt = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        monthL: monthL$4,
-        holyDay: holyDay$3,
-        weekdayL: weekdayL$3,
         BE: BE$3,
-        badiCalendar: badiCalendar$3
+        badiCalendar: badiCalendar$3,
+        holyDay: holyDay$3,
+        monthL: monthL$3,
+        weekdayL: weekdayL$3
     });
 
     const month$1 = {
@@ -765,7 +775,7 @@
         19: '‘Алā’',
         20: 'Аййāм-и Хā',
     };
-    const monthL$3 = {
+    const monthL$2 = {
         1: 'Великолепие',
         2: 'Слава',
         3: 'Красота',
@@ -864,21 +874,21 @@
 
     var ru = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        month: month$1,
-        monthL: monthL$3,
-        holyDay: holyDay$2,
-        weekday: weekday$1,
-        weekdayAbbr3: weekdayAbbr3$1,
-        weekdayAbbr2: weekdayAbbr2$1,
-        weekdayL: weekdayL$2,
-        yearInVahid: yearInVahid$1,
-        vahid: vahid$1,
-        kulliShay: kulliShay$1,
         BE: BE$2,
-        badiCalendar: badiCalendar$2
+        badiCalendar: badiCalendar$2,
+        holyDay: holyDay$2,
+        kulliShay: kulliShay$1,
+        month: month$1,
+        monthL: monthL$2,
+        vahid: vahid$1,
+        weekday: weekday$1,
+        weekdayAbbr2: weekdayAbbr2$1,
+        weekdayAbbr3: weekdayAbbr3$1,
+        weekdayL: weekdayL$2,
+        yearInVahid: yearInVahid$1
     });
 
-    const monthL$2 = {
+    const monthL$1 = {
         1: 'Praktfullhet',
         2: 'Härlighet',
         3: 'Skönhet',
@@ -927,11 +937,11 @@
 
     var sv = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        monthL: monthL$2,
-        holyDay: holyDay$1,
-        weekdayL: weekdayL$1,
         BE: BE$1,
-        badiCalendar: badiCalendar$1
+        badiCalendar: badiCalendar$1,
+        holyDay: holyDay$1,
+        monthL: monthL$1,
+        weekdayL: weekdayL$1
     });
 
     const month = {
@@ -956,7 +966,7 @@
         19: '阿拉',
         20: '阿亚米哈',
     };
-    const monthL$1 = {
+    const monthL = {
         1: '耀',
         2: '辉',
         3: '美',
@@ -1055,39 +1065,28 @@
 
     var zh = /*#__PURE__*/Object.freeze({
         __proto__: null,
-        month: month,
-        monthL: monthL$1,
-        holyDay: holyDay,
-        weekday: weekday,
-        weekdayAbbr3: weekdayAbbr3,
-        weekdayAbbr2: weekdayAbbr2,
-        weekdayL: weekdayL,
-        yearInVahid: yearInVahid,
-        vahid: vahid,
-        kulliShay: kulliShay,
         BE: BE,
-        badiCalendar: badiCalendar
+        badiCalendar: badiCalendar,
+        holyDay: holyDay,
+        kulliShay: kulliShay,
+        month: month,
+        monthL: monthL,
+        vahid: vahid,
+        weekday: weekday,
+        weekdayAbbr2: weekdayAbbr2,
+        weekdayAbbr3: weekdayAbbr3,
+        weekdayL: weekdayL,
+        yearInVahid: yearInVahid
     });
 
-    const monthL = {
-        1: 'Splendor',
-        16: 'Honor',
-    };
-
-    var en_us = /*#__PURE__*/Object.freeze({
-        __proto__: null,
-        monthL: monthL
-    });
-
-    /* eslint-disable dot-notation, line-comment-position, camelcase, sort-imports */
     const badiLocale = { en, ar, de, es, fa, fr, lv, nl, pt, ru, sv, zh, 'en-us': en_us, default: en };
     const setDefaultLanguage = (language) => {
         if (badiLocale[language] === undefined) {
-            // eslint-disable-next-line no-console
+            // biome-ignore lint/suspicious/noConsole: error message
             console.log('Chosen language does not exist. Setting has not been changed.');
         }
         else {
-            badiLocale['default'] = badiLocale[language];
+            badiLocale.default = badiLocale[language];
         }
     };
     let underlineFormat = 'css';
@@ -1096,18 +1095,46 @@
             underlineFormat = format;
         }
         else {
-            // eslint-disable-next-line no-console
+            // biome-ignore lint/suspicious/noConsole: error message
             console.log('Invalid underline format. Choose one of ["css", "u", "diacritic", "none"]. ' +
                 'Setting has not been changed.');
         }
     };
 
+    // biome-ignore format: compactness
+    const badiYears = [
+        'l4da', 'k4ci', 'k5c7', 'l4d6', 'l4ce', 'k4c4', 'k5d4', 'l4cb', 'l4c1', 'k4cj', 'k5c8', 'l4d7', 'l4cf', 'k4c5',
+        'k4d5', 'k5ce', 'l4c2', 'k4d2', 'k4ca', 'k5da', 'l4ch', 'k4c6', 'k4d6', 'k5cf', 'l4c4', 'k4d4', 'k4cc', 'k5c1',
+        'l4cj', 'k4c8', 'k4d8', 'k5cg', 'l4c5', 'k4d5', 'k4ce', 'k5c3', 'l4d2', 'k4ca', 'k4d9', 'k5ci', 'l4c6', 'k4d6',
+        'k4cf', 'k4c4', 'k5d4', 'k4cb', 'k4bj', 'k4cj', 'k5c9', 'k4d8', 'k4cg', 'k4c6', 'k5d6', 'k4cd', 'k4c2', 'k4d2',
+        'k5ca', 'k4d9', 'k4ci', 'k4c7', 'k5d7', 'k4cf', 'k4c4', 'k4d4', 'k5cc', 'k4bj', 'k4cj', 'k4c9', 'k5d9', 'k4cg',
+        'k4c6', 'k4d5', 'k5cd', 'k4c2', 'k4d1', 'k4ca', 'k4da', 'j5cj', 'k4c7', 'k4d7', 'k4cf', 'j5c4', 'k4d3', 'k4cb',
+        'k4c1', 'k5d1', 'l4c9', 'l4d9', 'l4ch', 'k5c6', 'l4d5', 'l4cd', 'l4c2', 'k5d2', 'l4ca', 'l4da', 'l4cj', 'k5c8',
+        'l4d7', 'l4cf', 'l4c4', 'k5d4', 'l4cb', 'l4c1', 'l4d1', 'k5c9', 'l4d8', 'l4cg', 'l4c5', 'k4d5', 'k5ce', 'l4c2',
+        'l4d2', 'k4cb', 'k5db', 'l4ci', 'l4c7', 'k4d7', 'k5cf', 'l4c4', 'l4d4', 'k4cc', 'k5c2', 'l4d1', 'l4c9', 'k4d9',
+        'k5ch', 'l4c5', 'l4d5', 'k4ce', 'k5c3', 'l4d2', 'l4cb', 'k4da', 'k5ci', 'l4c6', 'l4d6', 'k4cf', 'k5c5', 'l4d4',
+        'l4cc', 'k4c1', 'k4d1', 'k5c9', 'l4d8', 'k4cg', 'k4c6', 'k5d6', 'l4ce', 'k4c3', 'k4d3', 'k5cb', 'l4da', 'k4ci',
+        'k4c7', 'k5d7', 'l4cf', 'k4c5', 'k4d5', 'k5cd', 'l4c1', 'k4cj', 'k4c9', 'k5d9', 'l4cg', 'k4c6', 'k4d6', 'k5ce',
+        'l4c3', 'k4d2', 'k4ca', 'k5bj', 'l4ci', 'k4c7', 'k4d7', 'k4cg', 'k5c5', 'k4d4', 'k4cc', 'k4c1', 'k5d1', 'k4c9',
+        'k4d9', 'k4ch', 'k5c7', 'l4d6', 'l4ce', 'l4c3', 'l5d3', 'l4ca', 'l4da', 'l4cj', 'l5c8', 'l4d7', 'l4cg', 'l4c5',
+        'l5d4', 'l4cb', 'l4c1', 'l4d1', 'l5ca', 'l4d9', 'l4ch', 'l4c6', 'l5d6', 'l4cd', 'l4c2', 'l4d2', 'l4cb', 'k5c1',
+        'l4cj', 'l4c8', 'l4d8', 'k5cg', 'l4c4', 'l4d4', 'l4cc', 'k5c2', 'l4d1', 'l4ca', 'l4da', 'k5ci', 'l4c6', 'l4d5',
+        'l4ce', 'k5c3', 'l4d2', 'l4cb', 'l4db', 'k5cj', 'l4c8', 'l4d7', 'l4cf', 'k5c5', 'l4d4', 'l4cc', 'l4c2', 'k5d2',
+        'l4c9', 'l4d9', 'l4ch', 'k4c6', 'k5d6', 'l4ce', 'l4c3', 'k4d3', 'k5cc', 'l4db', 'l4cj', 'k4c8', 'k5d8', 'l4cf',
+        'l4c4', 'k4d5', 'k5cd', 'l4c2', 'l4d2', 'k4ca', 'k5d9', 'l4cg', 'l4c6', 'k4d6', 'k5cf', 'l4c3', 'l4d3', 'k4cb',
+        'k5bj', 'l4ci', 'l4c7', 'k4d7', 'k5cg', 'l4c5', 'l4d5', 'k4cd', 'k4c2', 'k5d2', 'l4c9', 'k4d9', 'k4ch', 'k5c7',
+        'l4d6', 'k4cf', 'k4c4', 'k5d4', 'l4cb', 'l4bj', 'l4cj', 'l5c8', 'm4d7', 'l4cg', 'l4c5', 'l5d5', 'm4cc', 'l4c1',
+        'l4d1', 'l5ca', 'm4d9', 'l4ch', 'l4c7', 'l5d7', 'm4ce', 'l4c3', 'l4d3', 'l5cb', 'm4bi', 'l4ci', 'l4c8', 'l4d8',
+        'l5ch', 'l4c5', 'l4d5', 'l4cd', 'l5c2', 'l4d1', 'l4c9', 'l4da', 'l5ci', 'l4c7', 'l4d7', 'l4cf', 'l5c4', 'l4d2',
+        'l4cb', 'l4bj', 'l5d1', 'l4c8', 'l4d8', 'l4cg', 'l5c5', 'l4d4', 'l4cc', 'l4c2', 'l5d2', 'l4c9', 'l4da', 'l4ci',
+        'l5c7',
+    ];
+
     const formatTokens = [
         ['DDL', 'DD+', 'MML', 'MM+', 'WWL', 'yyv', 'KiS'],
         ['dd', 'DD', 'mm', 'MM', 'ww', 'WW', 'yv', 'YV', 'vv', 'kk', 'yy', 'BE', 'BC', 'Va'],
-        ['d', 'D', 'm', 'M', 'W', 'v', 'k', 'y']
+        ['d', 'D', 'm', 'M', 'W', 'v', 'k', 'y'],
     ];
-    // eslint-disable-next-line complexity
     const formatBadiDate = (badiDate, formatString, language) => {
         if (!badiDate.isValid) {
             return 'Not a valid Badí‘ date';
@@ -1158,7 +1185,6 @@
         }
         return formattedDate;
     };
-    // eslint-disable-next-line complexity
     const getFormatItem = (badiDate, token, language) => {
         switch (token) {
             // Single character tokens
@@ -1171,7 +1197,7 @@
             case 'M':
                 return postProcessLocaleItem(formatItemFallback(language, 'month', badiDate.month), 3);
             case 'W':
-                return formatItemFallback(language, 'weekdayAbbr3', (badiDate.gregorianDate.weekday + 1) % 7 + 1);
+                return formatItemFallback(language, 'weekdayAbbr3', ((badiDate.gregorianDate.weekday + 1) % 7) + 1);
             case 'y':
                 return digitRewrite(badiDate.year, language);
             case 'v':
@@ -1180,27 +1206,27 @@
                 return digitRewrite(Math.floor((badiDate.year - 1) / 361) + 1, language);
             // Two character tokens
             case 'dd':
-                return digitRewrite((`0${String(badiDate.day)}`).slice(-2), language);
+                return digitRewrite(`0${String(badiDate.day)}`.slice(-2), language);
             case 'DD':
                 return postProcessLocaleItem(formatItemFallback(language, 'month', badiDate.day));
             case 'mm':
-                return digitRewrite((`0${String(badiDate.month)}`).slice(-2), language);
+                return digitRewrite(`0${String(badiDate.month)}`.slice(-2), language);
             case 'MM':
                 return postProcessLocaleItem(formatItemFallback(language, 'month', badiDate.month));
             case 'ww':
-                return formatItemFallback(language, 'weekdayAbbr2', (badiDate.gregorianDate.weekday + 1) % 7 + 1);
+                return formatItemFallback(language, 'weekdayAbbr2', ((badiDate.gregorianDate.weekday + 1) % 7) + 1);
             case 'WW':
-                return formatItemFallback(language, 'weekday', (badiDate.gregorianDate.weekday + 1) % 7 + 1);
+                return formatItemFallback(language, 'weekday', ((badiDate.gregorianDate.weekday + 1) % 7) + 1);
             case 'yy':
-                return digitRewrite((`00${String(badiDate.year)}`).slice(-3), language);
+                return digitRewrite(`00${String(badiDate.year)}`.slice(-3), language);
             case 'yv':
-                return digitRewrite((badiDate.year - 1) % 19 + 1, language);
+                return digitRewrite(((badiDate.year - 1) % 19) + 1, language);
             case 'YV':
-                return formatItemFallback(language, 'yearInVahid', (badiDate.year - 1) % 19 + 1);
+                return formatItemFallback(language, 'yearInVahid', ((badiDate.year - 1) % 19) + 1);
             case 'vv':
-                return digitRewrite((`0${String((Math.floor((badiDate.year - 1) / 19) + 2) % 19 - 1)}`).slice(-2), language);
+                return digitRewrite(`0${String(((Math.floor((badiDate.year - 1) / 19) + 2) % 19) - 1)}`.slice(-2), language);
             case 'kk':
-                return digitRewrite((`0${String(Math.floor((badiDate.year - 1) / 361) + 1)}`).slice(-2), language);
+                return digitRewrite(`0${String(Math.floor((badiDate.year - 1) / 361) + 1)}`.slice(-2), language);
             case 'Va':
                 return formatItemFallback(language, 'vahid');
             case 'BE':
@@ -1235,9 +1261,9 @@
                 return `${month} (${monthL})`;
             }
             case 'WWL':
-                return formatItemFallback(language, 'weekdayL', (badiDate.gregorianDate.weekday + 1) % 7 + 1);
+                return formatItemFallback(language, 'weekdayL', ((badiDate.gregorianDate.weekday + 1) % 7) + 1);
             case 'yyv':
-                return digitRewrite((`0${String((badiDate.year - 1) % 19 + 1)}`).slice(-2), language);
+                return digitRewrite(`0${String(((badiDate.year - 1) % 19) + 1)}`.slice(-2), language);
             case 'KiS':
                 return postProcessLocaleItem(formatItemFallback(language, 'kulliShay'));
             // istanbul ignore next
@@ -1274,7 +1300,10 @@
             case 'css':
                 return `<span style="text-decoration:underline">${str}</span>`;
             case 'diacritic':
-                return str.split('').map(char => `${char}\u0332`).join('');
+                return str
+                    .split('')
+                    .map((char) => `${char}\u0332`)
+                    .join('');
             case 'u':
                 return `<u>${str}</u>`;
             case 'none':
@@ -1290,7 +1319,7 @@
         if (unicodeOffset === 0) {
             return number;
         }
-        const codePoints = [...number].map(num => num.charCodeAt(0) + unicodeOffset);
+        const codePoints = [...number].map((num) => num.charCodeAt(0) + unicodeOffset);
         return String.fromCharCode(...codePoints);
     };
     const formatItemFallback = (language, category, index) => {
@@ -1309,41 +1338,12 @@
     const languageFallback = (languageCode) => {
         if (languageCode.includes('-')) {
             return languageCode.split('-')[0];
-            // eslint-disable-next-line no-negated-condition
         }
         else if (languageCode !== 'default') {
             return 'default';
         }
         return 'en';
     };
-
-    const badiYears = [
-        'l4da', 'k4ci', 'k5c7', 'l4d6', 'l4ce', 'k4c4', 'k5d4', 'l4cb', 'l4c1', 'k4cj', 'k5c8', 'l4d7', 'l4cf', 'k4c5',
-        'k4d5', 'k5ce', 'l4c2', 'k4d2', 'k4ca', 'k5da', 'l4ch', 'k4c6', 'k4d6', 'k5cf', 'l4c4', 'k4d4', 'k4cc', 'k5c1',
-        'l4cj', 'k4c8', 'k4d8', 'k5cg', 'l4c5', 'k4d5', 'k4ce', 'k5c3', 'l4d2', 'k4ca', 'k4d9', 'k5ci', 'l4c6', 'k4d6',
-        'k4cf', 'k4c4', 'k5d4', 'k4cb', 'k4bj', 'k4cj', 'k5c9', 'k4d8', 'k4cg', 'k4c6', 'k5d6', 'k4cd', 'k4c2', 'k4d2',
-        'k5ca', 'k4d9', 'k4ci', 'k4c7', 'k5d7', 'k4cf', 'k4c4', 'k4d4', 'k5cc', 'k4bj', 'k4cj', 'k4c9', 'k5d9', 'k4cg',
-        'k4c6', 'k4d5', 'k5cd', 'k4c2', 'k4d1', 'k4ca', 'k4da', 'j5cj', 'k4c7', 'k4d7', 'k4cf', 'j5c4', 'k4d3', 'k4cb',
-        'k4c1', 'k5d1', 'l4c9', 'l4d9', 'l4ch', 'k5c6', 'l4d5', 'l4cd', 'l4c2', 'k5d2', 'l4ca', 'l4da', 'l4cj', 'k5c8',
-        'l4d7', 'l4cf', 'l4c4', 'k5d4', 'l4cb', 'l4c1', 'l4d1', 'k5c9', 'l4d8', 'l4cg', 'l4c5', 'k4d5', 'k5ce', 'l4c2',
-        'l4d2', 'k4cb', 'k5db', 'l4ci', 'l4c7', 'k4d7', 'k5cf', 'l4c4', 'l4d4', 'k4cc', 'k5c2', 'l4d1', 'l4c9', 'k4d9',
-        'k5ch', 'l4c5', 'l4d5', 'k4ce', 'k5c3', 'l4d2', 'l4cb', 'k4da', 'k5ci', 'l4c6', 'l4d6', 'k4cf', 'k5c5', 'l4d4',
-        'l4cc', 'k4c1', 'k4d1', 'k5c9', 'l4d8', 'k4cg', 'k4c6', 'k5d6', 'l4ce', 'k4c3', 'k4d3', 'k5cb', 'l4da', 'k4ci',
-        'k4c7', 'k5d7', 'l4cf', 'k4c5', 'k4d5', 'k5cd', 'l4c1', 'k4cj', 'k4c9', 'k5d9', 'l4cg', 'k4c6', 'k4d6', 'k5ce',
-        'l4c3', 'k4d2', 'k4ca', 'k5bj', 'l4ci', 'k4c7', 'k4d7', 'k4cg', 'k5c5', 'k4d4', 'k4cc', 'k4c1', 'k5d1', 'k4c9',
-        'k4d9', 'k4ch', 'k5c7', 'l4d6', 'l4ce', 'l4c3', 'l5d3', 'l4ca', 'l4da', 'l4cj', 'l5c8', 'l4d7', 'l4cg', 'l4c5',
-        'l5d4', 'l4cb', 'l4c1', 'l4d1', 'l5ca', 'l4d9', 'l4ch', 'l4c6', 'l5d6', 'l4cd', 'l4c2', 'l4d2', 'l4cb', 'k5c1',
-        'l4cj', 'l4c8', 'l4d8', 'k5cg', 'l4c4', 'l4d4', 'l4cc', 'k5c2', 'l4d1', 'l4ca', 'l4da', 'k5ci', 'l4c6', 'l4d5',
-        'l4ce', 'k5c3', 'l4d2', 'l4cb', 'l4db', 'k5cj', 'l4c8', 'l4d7', 'l4cf', 'k5c5', 'l4d4', 'l4cc', 'l4c2', 'k5d2',
-        'l4c9', 'l4d9', 'l4ch', 'k4c6', 'k5d6', 'l4ce', 'l4c3', 'k4d3', 'k5cc', 'l4db', 'l4cj', 'k4c8', 'k5d8', 'l4cf',
-        'l4c4', 'k4d5', 'k5cd', 'l4c2', 'l4d2', 'k4ca', 'k5d9', 'l4cg', 'l4c6', 'k4d6', 'k5cf', 'l4c3', 'l4d3', 'k4cb',
-        'k5bj', 'l4ci', 'l4c7', 'k4d7', 'k5cg', 'l4c5', 'l4d5', 'k4cd', 'k4c2', 'k5d2', 'l4c9', 'k4d9', 'k4ch', 'k5c7',
-        'l4d6', 'k4cf', 'k4c4', 'k5d4', 'l4cb', 'l4bj', 'l4cj', 'l5c8', 'm4d7', 'l4cg', 'l4c5', 'l5d5', 'm4cc', 'l4c1',
-        'l4d1', 'l5ca', 'm4d9', 'l4ch', 'l4c7', 'l5d7', 'm4ce', 'l4c3', 'l4d3', 'l5cb', 'm4bi', 'l4ci', 'l4c8', 'l4d8',
-        'l5ch', 'l4c5', 'l4d5', 'l4cd', 'l5c2', 'l4d1', 'l4c9', 'l4da', 'l5ci', 'l4c7', 'l4d7', 'l4cf', 'l5c4', 'l4d2',
-        'l4cb', 'l4bj', 'l5d1', 'l4c8', 'l4d8', 'l4cg', 'l5c5', 'l4d4', 'l4cc', 'l4c2', 'l5d2', 'l4c9', 'l4da', 'l4ci',
-        'l5c7',
-    ];
 
     class BadiDate {
         constructor(date) {
@@ -1352,10 +1352,10 @@
             this._invalidReason = undefined;
             try {
                 if (this._isDateObject(date)) {
-                    this._gregorianDate = luxon.DateTime.fromObject({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate(), zone: 'UTC' });
+                    this._gregorianDate = luxon.DateTime.fromObject({ year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() }, { zone: 'UTC' });
                 }
                 else if (luxon.DateTime.isDateTime(date)) {
-                    this._gregorianDate = luxon.DateTime.fromObject({ year: date.year, month: date.month, day: date.day, zone: 'UTC' });
+                    this._gregorianDate = luxon.DateTime.fromObject({ year: date.year, month: date.month, day: date.day }, { zone: 'UTC' });
                 }
                 else if (this._isYearMonthDay(date) || this._isYearHolyDayNumber(date)) {
                     this._setFromBadiDate(date);
@@ -1381,16 +1381,17 @@
             return Object.prototype.toString.call(arg) === '[object Date]';
         }
         _isYearMonthDay(arg) {
-            return typeof arg.year === 'number' && typeof arg.month === 'number' &&
-                typeof arg.day === 'number';
+            return typeof arg.year === 'number' && typeof arg.month === 'number' && typeof arg.day === 'number';
         }
         _isYearHolyDayNumber(arg) {
-            return typeof arg.year === 'number' && arg.month === undefined &&
-                arg.day === undefined && typeof arg.holyDayNumber === 'number';
+            return (typeof arg.year === 'number' &&
+                arg.month === undefined &&
+                arg.day === undefined &&
+                typeof arg.holyDayNumber === 'number');
         }
         _notInValidGregorianDateRange(datetime) {
-            const lowerBound = luxon.DateTime.fromObject({ year: 1844, month: 3, day: 21, zone: 'UTC' });
-            const upperBound = luxon.DateTime.fromObject({ year: 2351, month: 3, day: 20, zone: 'UTC' });
+            const lowerBound = luxon.DateTime.fromObject({ year: 1844, month: 3, day: 21 }, { zone: 'UTC' });
+            const upperBound = luxon.DateTime.fromObject({ year: 2351, month: 3, day: 20 }, { zone: 'UTC' });
             return datetime < lowerBound || datetime > upperBound;
         }
         _setFromGregorianDate() {
@@ -1398,15 +1399,15 @@
                 throw new RangeError('Input date outside of valid range (1844-03-21 - 2351-03-20)');
             }
             const gregorianYear = this._gregorianDate.year;
-            const oldImplementationCutoff = luxon.DateTime.fromObject({ year: 2015, month: 3, day: 21, zone: 'UTC' });
+            const oldImplementationCutoff = luxon.DateTime.fromObject({ year: 2015, month: 3, day: 21 }, { zone: 'UTC' });
             if (this._gregorianDate < oldImplementationCutoff) {
                 const { month, day } = this._gregorianDate;
                 if (month < 3 || (month === 3 && day < 21)) {
-                    this._nawRuz = luxon.DateTime.fromObject({ year: gregorianYear - 1, month: 3, day: 21, zone: 'UTC' });
+                    this._nawRuz = luxon.DateTime.fromObject({ year: gregorianYear - 1, month: 3, day: 21 }, { zone: 'UTC' });
                     this._year = gregorianYear - 1844;
                 }
                 else {
-                    this._nawRuz = luxon.DateTime.fromObject({ year: gregorianYear, month: 3, day: 21, zone: 'UTC' });
+                    this._nawRuz = luxon.DateTime.fromObject({ year: gregorianYear, month: 3, day: 21 }, { zone: 'UTC' });
                     this._year = gregorianYear - 1843;
                 }
                 this._setOldAyyamiHaLength();
@@ -1425,7 +1426,7 @@
             const dayOfBadiYear = this._dayOfYear(this._gregorianDate);
             if (dayOfBadiYear < 343) {
                 this._month = Math.floor((dayOfBadiYear - 1) / 19 + 1);
-                this._day = (dayOfBadiYear - 1) % 19 + 1;
+                this._day = ((dayOfBadiYear - 1) % 19) + 1;
             }
             else if (dayOfBadiYear < 343 + this._ayyamiHaLength) {
                 this._month = 20;
@@ -1442,7 +1443,7 @@
                 throw new RangeError('Input date outside of valid range (1 - 507 B.E.)');
             }
             else if (this._year < 172) {
-                this._nawRuz = luxon.DateTime.fromObject({ year: 1843 + this._year, month: 3, day: 21, zone: 'UTC' });
+                this._nawRuz = luxon.DateTime.fromObject({ year: 1843 + this._year, month: 3, day: 21 }, { zone: 'UTC' });
                 this._setOldAyyamiHaLength();
                 this._yearTwinBirthdays = [12, 5, 13, 9];
             }
@@ -1495,12 +1496,14 @@
             this._yearTwinBirthdays = yearData.twinBirthdays;
         }
         _extractBadiYearInfo() {
-            let nawRuz, ayyamiHaLength, twinBirthdays;
+            let nawRuz;
+            let ayyamiHaLength;
+            let twinBirthdays;
             // Check whether data needs to be unpacked or exists in the verbose version
             // istanbul ignore else
             if (badiYears[0] === 'l4da') {
                 const components = badiYears[this._year - 172].split('');
-                nawRuz = luxon.DateTime.fromObject({ year: this._year - 172 + 2015, month: 3, day: parseInt(components[0], 36), zone: 'UTC' });
+                nawRuz = luxon.DateTime.fromObject({ year: this._year - 172 + 2015, month: 3, day: parseInt(components[0], 36) }, { zone: 'UTC' });
                 ayyamiHaLength = parseInt(components[1], 36);
                 const TB1 = [parseInt(components[2], 36), parseInt(components[3], 36)];
                 const TB2 = TB1[1] < 19 ? [TB1[0], TB1[1] + 1] : [TB1[0] + 1, 1];
@@ -1539,22 +1542,21 @@
         }
         _setHolyDay() {
             const mapping = this._holyDayMapping();
-            this._holyDay = parseInt(Object.keys(mapping)
-                .find(key => mapping[key][0] === this._month && mapping[key][1] === this._day), 10);
+            this._holyDay = parseInt(Object.keys(mapping).find((key) => mapping[key][0] === this._month && mapping[key][1] === this._day), 10);
         }
         _holyDayMapping() {
             return {
-                [1 /* NawRuz */]: [1, 1],
-                [2 /* FirstRidvan */]: [2, 13],
-                [3 /* NinthRidvan */]: [3, 2],
-                [4 /* TwelfthRidvan */]: [3, 5],
-                [5 /* DeclarationOfTheBab */]: [4, this._year < 172 ? 7 : 8],
-                [6 /* AscensionOfBahaullah */]: [4, 13],
-                [7 /* MartyrdomOfTheBab */]: [6, this._year < 172 ? 16 : 17],
-                [8 /* BirthOfTheBab */]: [this._yearTwinBirthdays[0], this._yearTwinBirthdays[1]],
-                [9 /* BirthOfBahaullah */]: [this._yearTwinBirthdays[2], this._yearTwinBirthdays[3]],
-                [10 /* DayOfTheCovenant */]: [14, 4],
-                [11 /* AscensionOfAbdulBaha */]: [14, 6],
+                [1 /* HolyDay.NawRuz */]: [1, 1],
+                [2 /* HolyDay.FirstRidvan */]: [2, 13],
+                [3 /* HolyDay.NinthRidvan */]: [3, 2],
+                [4 /* HolyDay.TwelfthRidvan */]: [3, 5],
+                [5 /* HolyDay.DeclarationOfTheBab */]: [4, this._year < 172 ? 7 : 8],
+                [6 /* HolyDay.AscensionOfBahaullah */]: [4, 13],
+                [7 /* HolyDay.MartyrdomOfTheBab */]: [6, this._year < 172 ? 16 : 17],
+                [8 /* HolyDay.BirthOfTheBab */]: [this._yearTwinBirthdays[0], this._yearTwinBirthdays[1]],
+                [9 /* HolyDay.BirthOfBahaullah */]: [this._yearTwinBirthdays[2], this._yearTwinBirthdays[3]],
+                [10 /* HolyDay.DayOfTheCovenant */]: [14, 4],
+                [11 /* HolyDay.AscensionOfAbdulBaha */]: [14, 6],
             };
         }
         _leapYearsBefore() {
@@ -1562,12 +1564,10 @@
             if (this.year > 172) {
                 // istanbul ignore else
                 if (badiYears[0] === 'l4da') {
-                    leapYearsBefore += badiYears.slice(0, this.year - 172).filter(entry => entry[1] === '5').length;
+                    leapYearsBefore += badiYears.slice(0, this.year - 172).filter((entry) => entry[1] === '5').length;
                 }
                 else {
-                    leapYearsBefore += Object.entries(badiYears)
-                        .filter(([year, data]) => parseInt(year, 10) < this.year &&
-                        data.ayyamiHaLength === 5).length;
+                    leapYearsBefore += Object.entries(badiYears).filter(([year, data]) => parseInt(year, 10) < this.year && data.ayyamiHaLength === 5).length;
                 }
             }
             return leapYearsBefore;
@@ -1607,10 +1607,10 @@
         }
         // number of the Badí' weekday between 1 (Jalál ~> Saturday) and 7 (Istiqlál ~> Friday).
         get weekday() {
-            return (this._gregorianDate.weekday + 1) % 7 + 1;
+            return ((this._gregorianDate.weekday + 1) % 7) + 1;
         }
         get yearInVahid() {
-            return (this._year - 1) % 19 + 1;
+            return ((this._year - 1) % 19) + 1;
         }
         get vahid() {
             return (Math.floor((this._year - 1) / 19) % 19) + 1;
@@ -1704,6 +1704,4 @@
     exports.BadiDate = BadiDate;
     exports.badiDateSettings = badiDateSettings;
 
-    Object.defineProperty(exports, '__esModule', { value: true });
-
-})));
+}));

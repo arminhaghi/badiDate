@@ -1,4 +1,3 @@
-/* eslint-disable line-comment-position, max-len */
 const equinoxes = [
     '2015-03-20T22:45:05Z', // Times until 2200 use the JPL DE405 Ephemeris
     '2016-03-20T04:30:41Z',
@@ -385,6 +384,7 @@ const equinoxes = [
     '2397-03-20T12:46:57Z',
     '2398-03-20T18:19:51Z',
     '2399-03-21T00:08:50Z',
-    '2400-03-20T06:01:18Z'];
+    '2400-03-20T06:01:18Z',
+];
 
 export { equinoxes };

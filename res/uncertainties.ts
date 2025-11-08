@@ -1,15 +1,14 @@
-/* eslint-disable */
+import * as fs from 'fs';
+import { DateTime } from 'luxon';
 import * as MeeusSunMoon from 'meeussunmoon';
-import * as luxon from 'luxon';
-import { latitudeTihran, longitudeTihran, nawRuzEndTihranUTC, calculateTwinBirthdays } from './generateYearData';
 import { BadiDate, badiDateSettings } from '../dist/badiDate-locales';
 import { equinoxes } from './equinoxes';
-import * as fs from 'fs';
+import { calculateTwinBirthdays, latitudeTihran, longitudeTihran, nawRuzEndTihranUTC } from './generateYearData';
 
-const nearestSunset = (datetime: luxon.DateTime): luxon.DateTime => {
-    const sunset1 = MeeusSunMoon.sunset(datetime.minus({ days: 1 }), latitudeTihran, longitudeTihran) as luxon.DateTime;
-    const sunset2 = MeeusSunMoon.sunset(datetime, latitudeTihran, longitudeTihran) as luxon.DateTime;
-    const sunset3 = MeeusSunMoon.sunset(datetime.plus({ days: 1 }), latitudeTihran, longitudeTihran) as luxon.DateTime;
+const nearestSunset = (datetime: DateTime): DateTime => {
+    const sunset1 = MeeusSunMoon.sunset(datetime.minus({ days: 1 }), latitudeTihran, longitudeTihran) as DateTime;
+    const sunset2 = MeeusSunMoon.sunset(datetime, latitudeTihran, longitudeTihran) as DateTime;
+    const sunset3 = MeeusSunMoon.sunset(datetime.plus({ days: 1 }), latitudeTihran, longitudeTihran) as DateTime;
 
     let sunset = sunset1;
     if (Math.abs(datetime.diff(sunset2).valueOf()) < Math.abs(datetime.diff(sunset).valueOf())) {
@@ -21,7 +20,7 @@ const nearestSunset = (datetime: luxon.DateTime): luxon.DateTime => {
     return sunset;
 };
 
-const nearestNewMoon = (datetime: luxon.DateTime): luxon.DateTime => {
+const nearestNewMoon = (datetime: DateTime): DateTime => {
     const newMoons = MeeusSunMoon.yearMoonPhases(datetime.year, 0);
     let newMoonBefore;
     let newMoonAfter;
@@ -32,8 +31,7 @@ const nearestNewMoon = (datetime: luxon.DateTime): luxon.DateTime => {
             break;
         }
     }
-    if (Math.abs(datetime.diff(newMoonBefore).valueOf()) <
-        Math.abs(datetime.diff(newMoonAfter).valueOf())) {
+    if (Math.abs(datetime.diff(newMoonBefore).valueOf()) < Math.abs(datetime.diff(newMoonAfter).valueOf())) {
         return newMoonBefore;
     }
     return newMoonAfter;
@@ -62,14 +60,15 @@ const nearestNewMoon = (datetime: luxon.DateTime): luxon.DateTime => {
  */
 const uncertaintyTable = () => {
     badiDateSettings({ underlineFormat: 'none' });
-    let output = 'Gregorian Year, Badíʻ Year, ΔT, σ(ΔT), March equinox, nearest sunset in Tihran, difference [s], ' +
+    let output =
+        'Gregorian Year, Badíʻ Year, ΔT, σ(ΔT), March equinox, nearest sunset in Tihran, difference [s], ' +
         'end of Naw-Rúz in Tihran, nearest new moon, difference [s], eighth new moon after Naw-Rúz, ' +
         'nearest sunset in Tihran, difference [s], date of Naw-Rúz, date of Birth of the Báb (Badíʻ), ' +
         'date of Birth of the Báb (Gregorian), length of Ayyám-i-Há\n';
     for (let i = 0; i < 336; i++) {
         const N = i + 10;
-        const errorDeltaT = Math.round(365.25 * N * Math.sqrt((N * 0.058 / 3) * (1 + N / 2500)) / 1000);
-        const equinox = luxon.DateTime.fromISO(equinoxes[i], { zone: 'UTC'});
+        const errorDeltaT = Math.round((365.25 * N * Math.sqrt(((N * 0.058) / 3) * (1 + N / 2500))) / 1000);
+        const equinox = DateTime.fromISO(equinoxes[i], { zone: 'UTC' });
         let deltaT;
         let t;
         if (i < 36) {
@@ -77,14 +76,13 @@ const uncertaintyTable = () => {
             deltaT = Math.round(62.92 + 0.32217 * t + 0.005589 * t * t);
         } else if (i < 136) {
             t = i + 2015;
-            deltaT = Math.round(-20 +
-                32 * ((t - 1820) / 100) * ((t - 1820) / 100) - 0.5628 * (2150 - t));
+            deltaT = Math.round(-20 + 32 * ((t - 1820) / 100) * ((t - 1820) / 100) - 0.5628 * (2150 - t));
         } else {
             t = (i + 195) / 100;
             deltaT = Math.round(-20 + 32 * t * t);
         }
         const sunset = nearestSunset(equinox);
-        let nawRuzEnd = nawRuzEndTihranUTC(equinox.toISO());
+        const nawRuzEnd = nawRuzEndTihranUTC(equinox.toISO());
         const nawRuzNewMoon = nearestNewMoon(nawRuzEnd);
         const newMoons = MeeusSunMoon.yearMoonPhases(nawRuzEnd.year, 0);
         let index = 0;
@@ -114,15 +112,13 @@ const uncertaintyTable = () => {
         output += `${equinox.diff(sunset).as('seconds')},`;
         output += nawRuzEnd.toFormat(`yyyy-MM-dd'T'HH:mm:ss','`);
         output += nawRuzNewMoon.toFormat(`yyyy-MM-dd'T'HH:mm:ss','`);
-        if (Math.abs(nawRuzEnd.diff(nawRuzNewMoon).as('seconds')) <
-            3 * errorDeltaT + 60) {
+        if (Math.abs(nawRuzEnd.diff(nawRuzNewMoon).as('seconds')) < 3 * errorDeltaT + 60) {
             output += '#';
         }
         output += `${nawRuzEnd.diff(nawRuzNewMoon).as('seconds')},`;
         output += eighthNewMoon.toFormat(`yyyy-MM-dd'T'HH:mm:ss','`);
         output += TBSunset.toFormat(`yyyy-MM-dd'T'HH:mm:ss','`);
-        if (Math.abs(eighthNewMoon.diff(TBSunset).as('seconds')) <
-            3 * errorDeltaT + 60) {
+        if (Math.abs(eighthNewMoon.diff(TBSunset).as('seconds')) < 3 * errorDeltaT + 60) {
             output += '#';
         }
         output += `${eighthNewMoon.diff(TBSunset).as('seconds')},`;

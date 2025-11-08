@@ -1,8 +1,8 @@
 {
-  "compilerOptions": {
-    "target": "es2017",
-    "esModuleInterop": true,
-    "moduleResolution": "Node",
-  },
-  "include": ["./src/**/*"]
+    "compilerOptions": {
+        "target": "es2018",
+        "esModuleInterop": true,
+        "moduleResolution": "Node"
+    },
+    "include": ["./src/**/*"]
 }

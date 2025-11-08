@@ -1,7 +1,7 @@
-import * as luxon from 'luxon';
+import { DateTime } from 'luxon';
 
 export interface BadiYearInfo {
-    nawRuz: luxon.DateTime;
+    nawRuz: DateTime;
     ayyamiHaLength: 4 | 5;
     twinBirthdays: [number, number, number, number];
 }
@@ -25,7 +25,7 @@ export interface YearHolyDayNumber {
     holyDayNumber: number;
 }
 
-export type InputDate = luxon.DateTime | Date | YearMonthDay | YearHolyDayNumber;
+export type InputDate = DateTime | Date | YearMonthDay | YearHolyDayNumber;
 
 export const enum HolyDay {
     NawRuz = 1,
@@ -39,4 +39,8 @@ export const enum HolyDay {
     BirthOfBahaullah = 9,
     DayOfTheCovenant = 10,
     AscensionOfAbdulBaha = 11,
+}
+
+export interface LocalBadiDateOptions {
+    useClockLocations?: boolean;
 }
